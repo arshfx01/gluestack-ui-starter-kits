@@ -9,7 +9,10 @@ import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 import { GluestackUIProvider } from "@/components/ui/gluestack-ui-provider";
-import { useColorScheme } from "@/components/useColorScheme";
+import { StatusBar } from "expo-status-bar";
+import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+import { AppHeader } from "@/components/ui/app-header";
+import BottomBtns from "@/components/BottomBtns";
 import "../global.css";
 
 export {
@@ -50,21 +53,26 @@ export default function RootLayout() {
 }
 
 function RootLayoutNav() {
-  const colorScheme = useColorScheme();
-
   return (
-    <GluestackUIProvider mode={(colorScheme ?? "light") as "light" | "dark"}>
-      <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-        <Stack screenOptions={{ headerShown: false }}>
-          <Stack.Screen name="signin" />
-          <Stack.Screen name="signup" />
-          <Stack.Screen name="forgot-password" />
-          <Stack.Screen name="create-password" />
-          <Stack.Screen name="news-feed" />
-          <Stack.Screen name="dashboard" />
-          <Stack.Screen name="profile" />
-        </Stack>
-      </ThemeProvider>
-    </GluestackUIProvider>
+    <SafeAreaProvider>
+      <GluestackUIProvider mode="light">
+        <ThemeProvider value={DefaultTheme}>
+          <StatusBar style="dark" />
+          <SafeAreaView style={{ flex: 1 }}>
+            <AppHeader />
+            <Stack screenOptions={{ headerShown: false }}>
+              <Stack.Screen name="signin" />
+              <Stack.Screen name="signup" />
+              <Stack.Screen name="forgot-password" />
+              <Stack.Screen name="create-password" />
+              <Stack.Screen name="news-feed" />
+              <Stack.Screen name="dashboard" />
+              <Stack.Screen name="profile" />
+            </Stack>
+            <BottomBtns />
+          </SafeAreaView>
+        </ThemeProvider>
+      </GluestackUIProvider>
+    </SafeAreaProvider>
   );
 }
