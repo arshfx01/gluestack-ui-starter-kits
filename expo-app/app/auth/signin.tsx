@@ -127,9 +127,14 @@ export default function SignIn() {
           alt="logo"
           className="w-20 h-20 rounded-full mb-4"
         />
-        <Text className="text-3xl font-bold text-center">Welcome Back</Text>
-        <Text className="text-gray-500 mt-2 text-center">
-          Sign in to continue
+        <Text className="text-3xl  text-center" style={{ fontFamily: "BGSB" }}>
+          Welcome to Orbit
+        </Text>
+        <Text
+          className="text-gray-500 mt-2 text-center"
+          style={{ fontFamily: "BGSB" }}
+        >
+          Where Attendance Meets Insight. Sign in to continue
         </Text>
       </View>
 
@@ -241,19 +246,19 @@ export default function SignIn() {
 
         <HStack className="justify-between mt-4">
           <TouchableOpacity
-            onPress={() => router.push("/auth/signup")}
-            className="flex-row items-center"
-          >
-            <UserPlus size={16} color="#3b82f6" />
-            <Text className="text-blue-500 ml-1">Sign Up</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
             onPress={() => router.push("/auth/forgot-password")}
             className="flex-row items-center"
           >
             <KeyRound size={16} color="#3b82f6" />
             <Text className="text-blue-500 ml-1">Forgot Password?</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => router.push("/auth/signup")}
+            className="flex-row items-center"
+          >
+            <UserPlus size={16} color="#3b82f6" />
+            <Text className="text-blue-500 ml-1">Sign Up</Text>
           </TouchableOpacity>
         </HStack>
       </VStack>

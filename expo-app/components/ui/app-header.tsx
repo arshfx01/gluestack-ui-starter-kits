@@ -1,6 +1,6 @@
 import { HStack } from "@/components/ui/hstack";
 import { Heading } from "@/components/ui/heading";
-import { View } from "react-native";
+import { Touchable, TouchableOpacity, View } from "react-native";
 import { Image } from "@/components/ui/image";
 import {
   ArrowRight,
@@ -18,6 +18,7 @@ import {
 import { VStack } from "./vstack";
 import { Badge, BadgeText } from "./badge";
 import { Text } from "./text";
+import { router } from "expo-router";
 
 export const AppHeader = () => {
   return (
@@ -35,9 +36,12 @@ export const AppHeader = () => {
             />
           </View>
           <VStack className="justify-start items-start">
-            <Heading className="text-2xl font-black tracking-wide text-typography-950">
-              Orb
-            </Heading>
+            <Text
+              className="text-2xl tracking-wide text-typography-950"
+              style={{ fontFamily: "BGSB" }}
+            >
+              Orbit
+            </Text>
             <Badge
               className="rounded-md px-2 py-[1px]"
               variant="outline"
@@ -55,10 +59,16 @@ export const AppHeader = () => {
           <View className="flex justify-center items-center border-border-300 p-3 rounded-full border bg-background-50">
             <MessageSquareQuote color="#000" size={20} />
           </View>
-          <Avatar size="md">
-            <AvatarFallbackText>Ar</AvatarFallbackText>
-            <AvatarBadge />
-          </Avatar>
+          <TouchableOpacity
+            onPress={() => {
+              router.push("/(tabs)/profile");
+            }}
+          >
+            <Avatar size="md">
+              <AvatarFallbackText>Ar</AvatarFallbackText>
+              <AvatarBadge />
+            </Avatar>
+          </TouchableOpacity>
         </HStack>
       </HStack>
       <HStack className="flex justify-between px-2 py-1 items-center gap-2 border-b border-border-100 bg-background-50">

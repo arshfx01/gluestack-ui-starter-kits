@@ -1,67 +1,59 @@
 import React from "react";
-import { View } from "react-native";
+import { View, Dimensions } from "react-native";
 import { VStack } from "@/components/ui/vstack";
 import { HStack } from "@/components/ui/hstack";
 import { Text } from "@/components/ui/text";
 import { Heading } from "@/components/ui/heading";
 import { Card } from "@/components/ui/card";
-import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-} from "recharts";
+import { LineChart } from "react-native-chart-kit";
 import { format, subDays } from "date-fns";
 
 // Generate dummy data for 45 classes
 const generateDummyData = () => {
   const data = [];
-  let attended = 43;
-  let missed = 3;
-  const totalClasses = 45;
+  const totalClasses = 45; // Keeping this for the overview text
 
   for (let i = 0; i < totalClasses; i++) {
     const date = subDays(new Date(), totalClasses - i - 1);
-    const isAttended = i < attended;
+    // Generate a random attendance percentage to show ups and downs
+    const attendancePercentage = Math.floor(Math.random() * 101);
 
     data.push({
       date: format(date, "MMM dd"),
-      attendance: isAttended ? 100 : 0,
+      attendance: attendancePercentage,
       classNumber: i + 1,
     });
   }
 
-  return data;
+  // For the overview, let's keep a consistent 'attended' and 'total' for display
+  const attendedCountDisplay = 43;
+  const totalClassesDisplay = 45;
+
+  return {
+    data,
+    attendedCount: attendedCountDisplay,
+    totalClasses: totalClassesDisplay,
+  };
 };
 
-const data = generateDummyData();
+const { data, attendedCount, totalClasses } = generateDummyData();
 
-const CustomTooltip = ({ active, payload, label }: any) => {
-  if (active && payload && payload.length) {
-    return (
-      <View className="bg-white p-3 rounded-lg shadow-lg border border-border-200">
-        <Text className="text-sm font-medium text-background-950">
-          Class {payload[0].payload.classNumber}
-        </Text>
-        <Text className="text-xs text-typography-400">{label}</Text>
-        <Text className="text-sm font-semibold text-primary-600">
-          {payload[0].value === 100 ? "Attended" : "Missed"}
-        </Text>
-      </View>
-    );
-  }
-  return null;
+const chartData = {
+  labels: [], // Set to empty array to hide labels, but satisfy type
+  datasets: [
+    {
+      data: data.map((d) => d.attendance),
+    },
+  ],
 };
 
 export const AttendanceGrowthChart = () => {
-  const attendanceRate = ((43 / 45) * 100).toFixed(1);
+  const attendanceRate = ((attendedCount / totalClasses) * 100).toFixed(1);
+  const screenWidth = Dimensions.get("window").width - 32; // Accounting for padding
 
   return (
-    <VStack className="flex-1 p-4" space="lg">
-      <Card className="p-4">
+    <VStack className=" " space="lg">
+      <View className="p-2">
         <VStack space="md">
           <HStack className="justify-between items-center">
             <VStack>
@@ -69,7 +61,7 @@ export const AttendanceGrowthChart = () => {
                 Attendance Overview
               </Heading>
               <Text className="text-sm text-typography-400">
-                Last 45 classes
+                Last {totalClasses} classes
               </Text>
             </VStack>
             <View className="bg-primary-50 px-3 py-2 rounded-lg">
@@ -79,40 +71,37 @@ export const AttendanceGrowthChart = () => {
             </View>
           </HStack>
 
-          <View className="h-[300px] mt-4">
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart
-                data={data}
-                margin={{ top: 20, right: 20, left: 0, bottom: 20 }}
-              >
-                <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                <XAxis
-                  dataKey="date"
-                  stroke="#6b7280"
-                  fontSize={12}
-                  tickLine={false}
-                  axisLine={{ stroke: "#e5e7eb" }}
-                />
-                <YAxis
-                  stroke="#6b7280"
-                  fontSize={12}
-                  tickLine={false}
-                  axisLine={{ stroke: "#e5e7eb" }}
-                  tickFormatter={(value: number) =>
-                    value === 100 ? "Attended" : "Missed"
-                  }
-                />
-                <Tooltip content={<CustomTooltip />} />
-                <Line
-                  type="monotone"
-                  dataKey="attendance"
-                  stroke="#2563eb"
-                  strokeWidth={2}
-                  dot={{ fill: "#2563eb", strokeWidth: 2 }}
-                  activeDot={{ r: 6, fill: "#2563eb" }}
-                />
-              </LineChart>
-            </ResponsiveContainer>
+          <View className="h-[300px] max-w-full">
+            <LineChart
+              data={chartData}
+              width={screenWidth}
+              height={300}
+              withDots={false}
+              withHorizontalLines={false} // Remove horizontal grid lines
+              withVerticalLines={false} // Remove vertical grid lines
+              chartConfig={{
+                backgroundColor: "#f8f8f8",
+                backgroundGradientFrom: "#f8f8f8",
+                backgroundGradientTo: "#f8f8f8",
+                decimalPlaces: 0,
+                color: (opacity = 1) => `#000`,
+                // labelColor and propsForBackgroundLines removed as grid and labels are off
+                style: {
+                  borderRadius: 20,
+                },
+                propsForDots: {
+                  r: "0",
+                },
+                fillShadowGradient: "#000",
+                fillShadowGradientOpacity: 0.1,
+              }}
+              bezier
+              style={{
+                marginVertical: 1,
+                borderRadius: 10,
+                marginLeft: 0,
+              }}
+            />
           </View>
 
           <HStack className="justify-between mt-4">
@@ -126,10 +115,12 @@ export const AttendanceGrowthChart = () => {
                 <Text className="text-sm text-typography-600">Missed</Text>
               </View>
             </HStack>
-            <Text className="text-sm text-typography-400">43/45 Classes</Text>
+            <Text className="text-sm text-typography-400">
+              {attendedCount}/{totalClasses} Classes
+            </Text>
           </HStack>
         </VStack>
-      </Card>
+      </View>
     </VStack>
   );
 };

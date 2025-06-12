@@ -32,6 +32,8 @@ import { router } from "expo-router";
 import { ClassSchedule } from "@/components/ClassSchedule";
 import { useAuth } from "@/app/context/AuthContext";
 import { SettingsLayout } from "@/screens/settings/layout";
+import { AttendanceGrowthChart } from "@/components/AttendanceGrowthChart";
+import { AnnouncementCard } from "@/components/AnnouncementCard";
 
 const Homepage = () => {
   const { userProfile } = useAuth();
@@ -51,10 +53,16 @@ const Homepage = () => {
         */}
         <VStack className="w-full" space="md">
           <VStack className="w-full">
-            <Heading className="font-normal text-secondary-300 tracking-tight text-2xl">
+            <Heading
+              className="font-normal text-secondary-300 tracking-tight text-2xl"
+              style={{ fontFamily: "BGSB" }}
+            >
               Welcome,
             </Heading>
-            <Heading className="font-medium text-typography-950 tracking-tight text-2xl">
+            <Heading
+              className="font-medium text-typography-950 tracking-tight text-2xl"
+              style={{ fontFamily: "BGSB" }}
+            >
               {userProfile?.fullName || "Guest"}.
             </Heading>
           </VStack>
@@ -66,9 +74,20 @@ const Homepage = () => {
               </HStack>
               <HStack className="flex p-3 justify-between">
                 <VStack className="" space="md">
-                  <Text className="text-5xl  font-bold text-background-950">
-                    93%
-                  </Text>
+                  <HStack className="flex items-center gap-0">
+                    <Text
+                      className="text-5xl text-[#000] "
+                      style={{ fontFamily: "BGSB", color: "#000" }}
+                    >
+                      35
+                    </Text>
+                    <Text
+                      className="text-5xl text-[#000] "
+                      style={{ fontFamily: "BGSB", color: "#b2b2b2" }}
+                    >
+                      %
+                    </Text>
+                  </HStack>
                   <HStack className="flex gap-2">
                     <Text className="">43 Attended |</Text>
                     <Text className="text-error-300 ">3 missed</Text>
@@ -153,10 +172,28 @@ const Homepage = () => {
               <Text className="text-base font-normal text-[#aeaeae]">Top</Text>
             </View>
           </HStack>
-          <VStack space="xs" className="w-full">
-            <View className="w-full h-32 bg-background-100 rounded-lg" />
-            <View className="w-full h-32 bg-background-100 rounded-lg" />
-            <View className="w-full h-32 bg-background-100 rounded-lg" />
+          <VStack space="md" className="w-full">
+            <AnnouncementCard
+              title="Important Exam Dates Announced!"
+              description="Please follow & check the official notice board for the updated mid-term examination schedule and guidelines."
+              postedBy="Administration"
+              postedWhen="2 hours ago"
+              priority="High"
+            />
+            <AnnouncementCard
+              title="Final dates for Mid-Term Exams Released"
+              description="The final dates for the mid-term exams have been released. Please check the official website for details."
+              postedBy="Administration"
+              postedWhen="2 hours ago"
+              priority="Medium"
+            />
+            <AnnouncementCard
+              title="Due to unforeseen circumstances, the Lab Internals have been postponed."
+              description="The final dates for the mid-term exams have been released. Please check the official website for details."
+              postedBy="Administration"
+              postedWhen="2 hours ago"
+              priority="Medium"
+            />
           </VStack>
         </VStack>
         <ClassSchedule

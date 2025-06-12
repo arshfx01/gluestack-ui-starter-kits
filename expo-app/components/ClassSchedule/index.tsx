@@ -59,7 +59,10 @@ export const ClassCard = ({
             <BookOpen size={20} color="#5c5c5c" />
           </View>
           <VStack className="px-2">
-            <Text className="text-lg font-bold text-background-950">
+            <Text
+              className="text-lg  text-background-950"
+              style={{ fontFamily: "BGSB" }}
+            >
               {title}
             </Text>
             <Text className=" text-sm font-medium text-typography-400">
@@ -68,8 +71,8 @@ export const ClassCard = ({
           </VStack>
         </HStack>
         {isLive && (
-          <View className="bg-error-100 px-2 py-1 rounded-full">
-            <Text className="text-error-600 text-sm font-medium">LIVE</Text>
+          <View className="bg-success-100 items-center flex justify-center gap-2 max-h-8 px-3 py-1 rounded-full">
+            <Text className="text-success-600 text-sm font-semibold">LIVE</Text>
           </View>
         )}
       </HStack>
@@ -244,21 +247,22 @@ export const ClassSchedule = ({
   };
 
   return (
-    <VStack className="flex-1">
+    <VStack className=" w-full">
       {/* Tabs */}
-      <HStack className="w-full border-b border-border-300">
+      <HStack className="w-full flex  border-b border-border-300">
         {tabs.map((tab) => (
           <TouchableOpacity
             key={tab.id}
-            className={`flex-1 py-2 ${
+            className={`px-3 max-w-fit py-1 ${
               activeTab === tab.id
                 ? "border-b border-background-900"
                 : "border-b border-border-300"
             }`}
+            style={{ borderBottomWidth: activeTab === tab.id ? 3 : 1 }}
             onPress={() => setActiveTab(tab.id)}
           >
             <Text
-              className={`text-center ${
+              className={`text-center text-lg ${
                 activeTab === tab.id
                   ? "text-background-950 font-bold"
                   : "text-secondary-300"
@@ -277,7 +281,7 @@ export const ClassSchedule = ({
         }}
         {...panResponder.panHandlers}
       >
-        <ScrollView className="flex-1">
+        <ScrollView className="">
           <VStack className="py-4" space="md">
             {renderContent()}
           </VStack>

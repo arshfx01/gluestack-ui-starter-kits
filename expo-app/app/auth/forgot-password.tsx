@@ -42,8 +42,13 @@ export default function ForgotPassword() {
           alt="logo"
           className="w-20 h-20 rounded-2xl mb-4"
         />
-        <Text className="text-3xl font-bold text-center">Reset Password</Text>
-        <Text className="text-gray-500 mt-2 text-center">
+        <Text className="text-3xl text-center" style={{ fontFamily: "BGSB" }}>
+          Reset Password
+        </Text>
+        <Text
+          className="text-gray-500 mt-2 text-center"
+          style={{ fontFamily: "BGSB" }}
+        >
           Enter your email address and we'll send you a link to reset your
           password.
         </Text>

@@ -16,6 +16,9 @@ import BottomBtns from "@/components/BottomBtns";
 import "../global.css";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import { router } from "expo-router";
+import { LoadingScreen } from "@/components/LoadingScreen";
+import * as NavigationBar from "expo-navigation-bar";
+import { Platform } from "react-native";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -33,6 +36,7 @@ SplashScreen.preventAutoHideAsync();
 export default function RootLayout() {
   const [loaded, error] = useFonts({
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
+    BGSB: require("../assets/fonts/BricolageGrotesqueSemiBold.ttf"),
     ...FontAwesome.font,
   });
 
@@ -61,10 +65,18 @@ export default function RootLayout() {
 function RootLayoutNav() {
   const { user, loading } = useAuth();
 
+  // This useEffect handles the navigation bar color, runs once on mount
+  useEffect(() => {
+    if (Platform.OS === "android") {
+      NavigationBar.setBackgroundColorAsync("white");
+    }
+  }, []); // Empty dependency array
+
+  // This useEffect handles the authentication-based routing
   useEffect(() => {
     if (!loading) {
       if (user) {
-        router.replace("/settings");
+        router.replace("/(tabs)");
       } else {
         router.replace("/auth/signin");
       }
@@ -72,7 +84,7 @@ function RootLayoutNav() {
   }, [user, loading]);
 
   if (loading) {
-    return null; // Or a loading screen
+    return <LoadingScreen />;
   }
 
   return (

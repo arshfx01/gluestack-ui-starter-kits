@@ -11,28 +11,36 @@ import {
   SparkleIcon,
   Sparkles,
 } from "lucide-react-native";
-import { TouchableOpacity, View } from "react-native";
+import { TouchableOpacity } from "react-native";
 import { router } from "expo-router";
+import { LinearGradient } from "expo-linear-gradient";
+import { HomeIcon } from "./HomeIcon";
 
 type Props = {};
 
 const BottomBtns = (props: Props) => {
   return (
-    <View className="absolute bottom-0 left-0 right-0 bg-transparent backdrop-blur-lg p-4 px-6  border-gray-200">
+    <LinearGradient
+      colors={["transparent", "#FFFFFF", "#FFFFFF"]}
+      locations={[0, 0.5, 1]}
+      start={{ x: 0.5, y: 0 }}
+      end={{ x: 0.5, y: 1 }}
+      className="absolute  bottom-0 left-0 right-0 p-4 px-6 "
+    >
       <HStack className="flex items-center justify-between">
         <TouchableOpacity
           onPress={() => {
-            router.push("settings");
+            router.push("/(tabs)");
           }}
-          className=" border border-background-200 rounded-full p-4 hover:bg-background-200 flex items-center justify-center"
+          className=" bg-white/50 border border-background-200 rounded-full p-4 hover:bg-background-200 flex items-center justify-center"
         >
-          <Home color="#5c5c5c" size={24} />
+          <HomeIcon color="#5c5c5c" width={24} height={24} />
         </TouchableOpacity>
 
         <Button
           className="h-14 bg-black flex gap-4 w-[60%] rounded-2xl"
           onPress={() => {
-            router.push("scan");
+            router.push("/scan");
           }}
           variant="solid"
           action="primary"
@@ -47,14 +55,14 @@ const BottomBtns = (props: Props) => {
         </Button>
         <TouchableOpacity
           onPress={() => {
-            router.push("settings");
+            router.push("/settings");
           }}
-          className=" border border-background-200 rounded-full p-4 hover:bg-background-200 flex items-center justify-center"
+          className="bg-white-50 border border-background-200 rounded-full p-4 hover:bg-background-200 flex items-center justify-center"
         >
           <Settings color="#5c5c5c" size={24} />
         </TouchableOpacity>
       </HStack>
-    </View>
+    </LinearGradient>
   );
 };
 

@@ -157,8 +157,13 @@ export default function SignUp() {
           alt="logo"
           className="w-20 h-20 rounded-full mb-4"
         />
-        <Text className="text-3xl font-bold text-center">Create Account</Text>
-        <Text className="text-gray-500 mt-2 text-center">
+        <Text className="text-3xl  text-center" style={{ fontFamily: "BGSB" }}>
+          Create Account
+        </Text>
+        <Text
+          className="text-gray-500 mt-2 text-center"
+          style={{ fontFamily: "BGSB" }}
+        >
           Sign up to get started
         </Text>
       </View>
