@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "310596895459",
+    "project_id": "orbit-app-b434f",
+    "storage_bucket": "orbit-app-b434f.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:310596895459:android:f1d03107e16314d7133bd6",
+        "android_client_info": {
+          "package_name": "com.gluestack.expoapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "310596895459-55fcodtb48kbtp88obatov33s4hau6t5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAeiJiHeYGPNckniw-6I8M6vl70yw5C4gc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "310596895459-55fcodtb48kbtp88obatov33s4hau6t5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

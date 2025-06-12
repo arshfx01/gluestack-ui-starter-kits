@@ -197,6 +197,7 @@ module.exports = {
       },
       fontWeight: {
         hairline: "100",
+        black: "900",
         extraBlack: "950",
       },
       fontSize: {

@@ -20,7 +20,6 @@ export const SettingsLayout = (props: SettingsLayoutProps) => {
         <HStack className="w-full h-full bg-background-0 flex-grow justify-center">
           <VStack className="md:items-center relative md:justify-center flex-1 w-full  px-5 py-2 md:gap-10 gap-16 md:m-auto md:w-1/2 h-full">
             {props.children}
-            <View className="absolute z-30 mx-auto ml-5 bottom-0 p-3 border-border-100 border-t w-full min-h-20"></View>
           </VStack>
         </HStack>
       </ScrollView>

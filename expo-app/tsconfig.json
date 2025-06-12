@@ -4,19 +4,15 @@
     "strict": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": [
-        "./*"
-      ],
-      "@/assets/*": [
-        "../../packages/shared/assets/*",
-        "./assets/*"
-      ]
+      "@/*": ["./*"],
+      "@/assets/*": ["../../packages/shared/assets/*", "./assets/*"]
     }
   },
   "include": [
     "**/*.ts",
     "**/*.tsx",
     ".expo/types/**/*.ts",
-    "expo-env.d.ts"
+    "expo-env.d.ts",
+    "nativewind-env.d.ts"
   ]
 }

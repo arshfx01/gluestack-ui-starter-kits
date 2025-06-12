@@ -14,6 +14,8 @@ import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { AppHeader } from "@/components/ui/app-header";
 import BottomBtns from "@/components/BottomBtns";
 import "../global.css";
+import { AuthProvider, useAuth } from "./context/AuthContext";
+import { router } from "expo-router";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -49,17 +51,37 @@ export default function RootLayout() {
     return null;
   }
 
-  return <RootLayoutNav />;
+  return (
+    <AuthProvider>
+      <RootLayoutNav />
+    </AuthProvider>
+  );
 }
 
 function RootLayoutNav() {
+  const { user, loading } = useAuth();
+
+  useEffect(() => {
+    if (!loading) {
+      if (user) {
+        router.replace("/settings");
+      } else {
+        router.replace("/auth/signin");
+      }
+    }
+  }, [user, loading]);
+
+  if (loading) {
+    return null; // Or a loading screen
+  }
+
   return (
     <SafeAreaProvider>
       <GluestackUIProvider mode="light">
         <ThemeProvider value={DefaultTheme}>
           <StatusBar style="dark" />
           <SafeAreaView style={{ flex: 1 }}>
-            <AppHeader />
+            {user && <AppHeader />}
             <Stack screenOptions={{ headerShown: false }}>
               <Stack.Screen name="signin" />
               <Stack.Screen name="signup" />
@@ -69,7 +91,7 @@ function RootLayoutNav() {
               <Stack.Screen name="dashboard" />
               <Stack.Screen name="profile" />
             </Stack>
-            <BottomBtns />
+            {user && <BottomBtns />}
           </SafeAreaView>
         </ThemeProvider>
       </GluestackUIProvider>
