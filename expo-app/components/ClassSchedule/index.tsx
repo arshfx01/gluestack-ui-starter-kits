@@ -258,7 +258,11 @@ export const ClassSchedule = ({
                 ? "border-b border-background-900"
                 : "border-b border-border-300"
             }`}
-            style={{ borderBottomWidth: activeTab === tab.id ? 3 : 1 }}
+            style={{
+              borderBottomWidth: activeTab === tab.id ? 3 : 0,
+              borderBottomLeftRadius: 2,
+              borderBottomRightRadius: 2,
+            }}
             onPress={() => setActiveTab(tab.id)}
           >
             <Text

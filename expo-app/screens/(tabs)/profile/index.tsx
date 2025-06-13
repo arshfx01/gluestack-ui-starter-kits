@@ -52,7 +52,7 @@ const Profile = (props: Props) => {
 
         <VStack space="xs" className="items-center">
           <Text
-            className="text-3xl  text-background-950"
+            className="text-3xl  text-center  text-background-950"
             style={{ fontFamily: "BGSB" }}
           >
             {displayUserName}
