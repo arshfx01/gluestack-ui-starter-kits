@@ -1,6 +1,6 @@
 import { Text } from "@/components/ui/text";
 import React from "react";
-import { View } from "react-native";
+import { View, TouchableOpacity } from "react-native";
 import { VStack } from "@/components/ui/vstack";
 import { HStack } from "@/components/ui/hstack";
 import { Heading } from "@/components/ui/heading";
@@ -10,14 +10,36 @@ import {
   AvatarImage,
 } from "@/components/ui/avatar";
 import { Badge, BadgeText } from "@/components/ui/badge";
-import { Calendar, Mail, Phone } from "lucide-react-native";
+import { Calendar, Mail, Phone, LogOut } from "lucide-react-native";
 import { useAuth } from "@/app/context/AuthContext";
 import { formatDistanceToNowStrict } from "date-fns";
+import { auth } from "@/app/config/firebase";
+import { signOut } from "firebase/auth";
+import { router } from "expo-router";
+import {
+  Actionsheet,
+  ActionsheetContent,
+  ActionsheetItem,
+  ActionsheetItemText,
+  ActionsheetDragIndicator,
+  ActionsheetDragIndicatorWrapper,
+  ActionsheetBackdrop,
+} from "@/components/ui/actionsheet";
 
 type Props = {};
 
 const Profile = (props: Props) => {
   const { user, userProfile } = useAuth();
+  const [showLogoutSheet, setShowLogoutSheet] = React.useState(false);
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      router.replace("/auth/signin");
+    } catch (error) {
+      console.error("Error signing out:", error);
+    }
+  };
 
   const joinedAgo = user?.metadata?.creationTime
     ? formatDistanceToNowStrict(new Date(user.metadata.creationTime), {
@@ -98,6 +120,14 @@ const Profile = (props: Props) => {
               </BadgeText>
             </Badge>
           </HStack>
+
+          <TouchableOpacity
+            onPress={() => setShowLogoutSheet(true)}
+            className="mt-8 flex-row items-center justify-center bg-background-500 px-6 py-3 rounded-lg"
+          >
+            <LogOut size={20} color="white" />
+            <Text className="text-white ml-2 font-semibold">Logout</Text>
+          </TouchableOpacity>
         </VStack>
 
         {/* Example of additional sections if needed 
@@ -115,6 +145,46 @@ const Profile = (props: Props) => {
         </View>
                 */}
       </VStack>
+
+      <Actionsheet
+        isOpen={showLogoutSheet}
+        onClose={() => setShowLogoutSheet(false)}
+      >
+        <ActionsheetBackdrop />
+        <ActionsheetContent>
+          <VStack space="md" className="justify-center w-full items-center ">
+            <ActionsheetDragIndicatorWrapper>
+              <ActionsheetDragIndicator />
+            </ActionsheetDragIndicatorWrapper>
+            <Text
+              style={{ fontFamily: "BGSB" }}
+              className="text-2xl font-semibold text-black text-center mb-2"
+            >
+              Confirm Logout
+            </Text>
+            <Text className="text-sm text-typography-600 text-center mb-6">
+              Are you sure you want to logout? You will need to login again to
+              access your profile and other features.
+            </Text>
+            <ActionsheetItem
+              onPress={handleLogout}
+              className="bg-error-500 rounded-lg w-full flex justify-center items-center"
+            >
+              <ActionsheetItemText className="text-white text-lg font-semibold text-center">
+                Logout
+              </ActionsheetItemText>
+            </ActionsheetItem>
+            <ActionsheetItem
+              onPress={() => setShowLogoutSheet(false)}
+              className="bg-backgroun0 rounded-lg w-full flex justify-center items-center"
+            >
+              <ActionsheetItemText className="text-lg font-semibold text-center text-background-950">
+                Cancel
+              </ActionsheetItemText>
+            </ActionsheetItem>
+          </VStack>
+        </ActionsheetContent>
+      </Actionsheet>
     </VStack>
   );
 };
