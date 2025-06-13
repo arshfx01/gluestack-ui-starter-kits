@@ -26,7 +26,7 @@ A modern, feature-rich mobile application built with Expo and React Native, desi
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/arshfx01/gluestack-ui-starter-kits.git
+git clone https://github.com/arshfx01/orbit-app.git
 cd gluestack-ui-starter-kits
 ```
 
