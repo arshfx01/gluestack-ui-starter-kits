@@ -109,7 +109,9 @@ export const AppHeader = () => {
                   action="muted"
                   size="sm"
                 >
-                  <BadgeText className="text-xs font-bold">student</BadgeText>
+                  <BadgeText className="text-xs font-bold">
+                    {userProfile?.role || "student"}
+                  </BadgeText>
                 </Badge>
               </VStack>
             </HStack>

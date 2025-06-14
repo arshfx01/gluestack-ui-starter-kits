@@ -134,6 +134,8 @@ export default function SignUp() {
         rollNo,
         email: userCredential.user.email,
         createdAt: new Date().toISOString(),
+        role: rollNo.startsWith("1") ? "teacher" : "student",
+        classId: "",
       });
 
       toast.show({
@@ -269,6 +271,8 @@ export default function SignUp() {
         rollNo,
         phoneNumber: userCredential.user.phoneNumber,
         createdAt: new Date().toISOString(),
+        role: rollNo.startsWith("1") ? "teacher" : "student",
+        classId: "",
       });
 
       toast.show({

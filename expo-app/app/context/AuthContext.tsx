@@ -7,6 +7,8 @@ interface UserProfile {
   fullName: string;
   rollNo: string;
   email: string;
+  role: "teacher" | "student";
+  classId: string;
 }
 
 interface AuthContextType {
