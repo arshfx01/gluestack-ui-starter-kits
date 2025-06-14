@@ -1,32 +1,54 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, Alert } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import { sendPasswordResetEmail } from "firebase/auth";
 import { auth } from "../config/firebase";
 import { router } from "expo-router";
 import { Mail, ArrowRight, ArrowLeft, KeyRound } from "lucide-react-native";
 import { Image } from "@/components/ui/image";
 import { VStack } from "@/components/ui/vstack";
+import { useToast } from "@/components/ui/toast";
+import { Button, ButtonText } from "@/components/ui/button";
+import { Input, InputField, InputSlot } from "@/components/ui/input";
+import { TextInput } from "react-native";
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
+  const toast = useToast();
 
   const handleResetPassword = async () => {
     if (!email) {
-      Alert.alert("Error", "Please enter your email address");
+      toast.show({
+        render: () => (
+          <View className="bg-error-500 p-4 rounded-lg">
+            <Text className="text-white">Please enter your email address</Text>
+          </View>
+        ),
+      });
       return;
     }
 
     try {
       setLoading(true);
       await sendPasswordResetEmail(auth, email);
-      Alert.alert(
-        "Success",
-        "Password reset email sent. Please check your inbox.",
-        [{ text: "OK", onPress: () => router.push("/auth/signin") }]
-      );
+      toast.show({
+        render: () => (
+          <View className="bg-success-500 p-4 rounded-lg">
+            <Text className="text-white">
+              Password reset email sent. Please check your inbox.
+            </Text>
+          </View>
+        ),
+      });
+      router.push("/auth/signin");
     } catch (error: any) {
-      Alert.alert("Error", error.message);
+      toast.show({
+        render: () => (
+          <View className="bg-error-500 p-4 rounded-lg">
+            <Text className="text-white">{error.message}</Text>
+          </View>
+        ),
+      });
     } finally {
       setLoading(false);
     }

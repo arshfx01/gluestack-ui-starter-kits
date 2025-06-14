@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { View, Text, TextInput, TouchableOpacity, Alert } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import {
   signInWithEmailAndPassword,
   PhoneAuthProvider,
@@ -23,10 +23,15 @@ import { HStack } from "@/components/ui/hstack";
 import { FirebaseRecaptchaVerifierModal } from "expo-firebase-recaptcha";
 import type { FirebaseRecaptchaVerifierModal as RecaptchaVerifierModalType } from "expo-firebase-recaptcha";
 import { useAuth } from "../context/AuthContext";
+import { useToast } from "@/components/ui/toast";
+import { Button, ButtonText } from "@/components/ui/button";
+import { Input, InputField, InputSlot } from "@/components/ui/input";
+import { TextInput } from "react-native";
 
 export default function SignIn() {
   const router = useRouter();
   const { user } = useAuth();
+  const toast = useToast();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -45,16 +50,35 @@ export default function SignIn() {
 
   const handleSignIn = async () => {
     if (!email || !password) {
-      Alert.alert("Error", "Please fill in all fields");
+      toast.show({
+        render: () => (
+          <View className="bg-error-500 p-4 rounded-lg">
+            <Text className="text-white">Please fill in all fields</Text>
+          </View>
+        ),
+      });
       return;
     }
 
     try {
       setLoading(true);
       await signInWithEmailAndPassword(auth, email, password);
+      toast.show({
+        render: () => (
+          <View className="bg-success-500 p-4 rounded-lg">
+            <Text className="text-white">Signed in successfully</Text>
+          </View>
+        ),
+      });
       router.replace("/(tabs)");
     } catch (error: any) {
-      Alert.alert("Error", error.message);
+      toast.show({
+        render: () => (
+          <View className="bg-error-500 p-4 rounded-lg">
+            <Text className="text-white">{error.message}</Text>
+          </View>
+        ),
+      });
     } finally {
       setLoading(false);
     }
@@ -62,7 +86,13 @@ export default function SignIn() {
 
   const handlePhoneSignIn = async () => {
     if (!phoneNumber) {
-      Alert.alert("Error", "Please enter your phone number");
+      toast.show({
+        render: () => (
+          <View className="bg-error-500 p-4 rounded-lg">
+            <Text className="text-white">Please enter your phone number</Text>
+          </View>
+        ),
+      });
       return;
     }
 
@@ -80,9 +110,25 @@ export default function SignIn() {
       );
       setVerificationId(confirmation.verificationId);
       setShowVerificationInput(true);
-      Alert.alert("Success", "Verification code sent to your phone");
+      toast.show({
+        render: () => (
+          <View className="bg-success-500 p-4 rounded-lg">
+            <Text className="text-white">
+              Verification code sent to your phone
+            </Text>
+          </View>
+        ),
+      });
     } catch (error: any) {
-      Alert.alert("Error", error.message || "Failed to send verification code");
+      toast.show({
+        render: () => (
+          <View className="bg-error-500 p-4 rounded-lg">
+            <Text className="text-white">
+              {error.message || "Failed to send verification code"}
+            </Text>
+          </View>
+        ),
+      });
     } finally {
       setLoading(false);
     }
@@ -90,7 +136,15 @@ export default function SignIn() {
 
   const verifyCode = async () => {
     if (!verificationCode) {
-      Alert.alert("Error", "Please enter the verification code");
+      toast.show({
+        render: () => (
+          <View className="bg-error-500 p-4 rounded-lg">
+            <Text className="text-white">
+              Please enter the verification code
+            </Text>
+          </View>
+        ),
+      });
       return;
     }
 
@@ -101,9 +155,24 @@ export default function SignIn() {
         verificationCode
       );
       await signInWithCredential(auth, credential);
+      toast.show({
+        render: () => (
+          <View className="bg-success-500 p-4 rounded-lg">
+            <Text className="text-white">
+              Phone number verified successfully
+            </Text>
+          </View>
+        ),
+      });
       router.replace("/(tabs)");
     } catch (error: any) {
-      Alert.alert("Error", error.message);
+      toast.show({
+        render: () => (
+          <View className="bg-error-500 p-4 rounded-lg">
+            <Text className="text-white">{error.message}</Text>
+          </View>
+        ),
+      });
     } finally {
       setLoading(false);
     }
@@ -127,7 +196,7 @@ export default function SignIn() {
           alt="logo"
           className="w-20 h-20 rounded-full mb-4"
         />
-        <Text className="text-3xl  text-center" style={{ fontFamily: "BGSB" }}>
+        <Text className="text-3xl text-center" style={{ fontFamily: "BGSB" }}>
           Welcome to Orbit
         </Text>
         <Text
@@ -165,7 +234,7 @@ export default function SignIn() {
             </View>
 
             <TouchableOpacity
-              className="w-full bg-blue-500 p-4 rounded-lg flex-row items-center justify-center space-x-2"
+              className="w-full  bg-blue-500 p-4 rounded-lg flex-row items-center justify-center space-x-2"
               onPress={handleSignIn}
               disabled={loading}
             >

@@ -35,6 +35,7 @@ import { SettingsLayout } from "@/screens/settings/layout";
 import { AttendanceGrowthChart } from "@/components/AttendanceGrowthChart";
 import { AnnouncementCard } from "@/components/AnnouncementCard";
 import AnnouncementWidget from "@/components/AnnouncementsWidget";
+import { Pressable } from "@/components/ui/pressable";
 
 const Homepage = () => {
   const { userProfile } = useAuth();
@@ -146,66 +147,68 @@ const Homepage = () => {
                 className: "col-span-6 w-full",
               }}
             >
-              <View className="p-6 border-b w-full flex justify-start items-center border-border-300 rounded-xl">
-                <CalendarIcon color="black" />
-              </View>
-              <Text className="p-2 text-center w-full flex justify-start items-center ">
-                History
-              </Text>
+              <Pressable onPress={() => router.push("/history")}>
+                <View className="p-6 border-b w-full flex justify-start items-center border-border-300 rounded-xl">
+                  <CalendarIcon color="black" />
+                </View>
+                <Text className="p-2 text-center w-full flex justify-start items-center ">
+                  History
+                </Text>
+              </Pressable>
             </GridItem>
           </Grid>
           <Divider />
-          <AnnouncementWidget />
-        </VStack>
-        <ClassSchedule
-          currentClass={{
-            title: "Machine Learning",
-            time: "10:00 AM - 11:30 AM",
-            room: "Room 302",
-            instructor: "Dr. Samreen Imran",
-            type: "Online",
-            isLive: true,
-            attendance: {
-              percentage: 93,
-              attended: 43,
-              missed: 3,
-              total: 45,
-              streak: 10,
-            },
-          }}
-          upcomingClasses={[
-            {
-              title: "Physics Lab",
-              time: "1:00 PM - 3:00 PM",
-              room: "Lab 105",
-              instructor: "Prof. John Smith",
-              type: "Offline",
-              attendance: {
-                percentage: 95,
-                attended: 38,
-                missed: 2,
-                total: 40,
-                streak: 15,
-              },
-            },
-          ]}
-          previousClasses={[
-            {
-              title: "Chemistry",
-              time: "9:00 AM - 10:30 AM",
-              room: "Room 201",
-              instructor: "Dr. Michael Lee",
+          <ClassSchedule
+            currentClass={{
+              title: "Machine Learning",
+              time: "10:00 AM - 11:30 AM",
+              room: "Room 302",
+              instructor: "Dr. Samreen Imran",
               type: "Online",
+              isLive: true,
               attendance: {
-                percentage: 90,
-                attended: 36,
-                missed: 4,
-                total: 40,
-                streak: 8,
+                percentage: 93,
+                attended: 43,
+                missed: 3,
+                total: 45,
+                streak: 10,
               },
-            },
-          ]}
-        />
+            }}
+            upcomingClasses={[
+              {
+                title: "Physics Lab",
+                time: "1:00 PM - 3:00 PM",
+                room: "Lab 105",
+                instructor: "Prof. John Smith",
+                type: "Offline",
+                attendance: {
+                  percentage: 95,
+                  attended: 38,
+                  missed: 2,
+                  total: 40,
+                  streak: 15,
+                },
+              },
+            ]}
+            previousClasses={[
+              {
+                title: "Chemistry",
+                time: "9:00 AM - 10:30 AM",
+                room: "Room 201",
+                instructor: "Dr. Michael Lee",
+                type: "Online",
+                attendance: {
+                  percentage: 90,
+                  attended: 36,
+                  missed: 4,
+                  total: 40,
+                  streak: 8,
+                },
+              },
+            ]}
+          />
+        </VStack>
+        <AnnouncementWidget />
       </VStack>
     </ScrollView>
   );

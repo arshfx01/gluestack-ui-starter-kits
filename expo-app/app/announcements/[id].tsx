@@ -82,41 +82,35 @@ export default function AnnouncementDetail() {
   return (
     <ScrollView className="flex-1 pb-20 bg-white w-full h-sreen ">
       {/* Content */}
-      <VStack className="p-4 " space="md">
+      <VStack className="p-4 w-full " space="md">
         {/* Title Section */}
-        <LinearGradient
-          colors={["#ffffff", "#ffeeee"]}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 0 }}
-          style={{
-            borderRadius: 10,
-            padding: 12,
-          }}
-        >
-          <VStack space="md">
-            <Text
-              className="text-3xl text-typography-900"
-              style={{ fontFamily: "BGSB" }}
+
+        <VStack space="md" className="w-full">
+          <Text
+            className="text-3xl text-typography-900"
+            style={{ fontFamily: "BGSB" }}
+          >
+            {announcement.title}
+          </Text>
+          <HStack
+            className="items-center space-x-2 w-full py-2 border-b border-t border-border-200 justify-between"
+            space="md"
+          >
+            <Badge
+              variant="outline"
+              action={announcement.priority === "High" ? "error" : "muted"}
+              className="px-3 py-1"
             >
-              {announcement.title}
-            </Text>
-            <HStack className="items-center space-x-2">
-              <Badge
-                variant="outline"
-                action={announcement.priority === "High" ? "error" : "muted"}
-                className="px-3 py-1"
-              >
-                <BadgeText className="font-medium">
-                  {announcement.priority}
-                </BadgeText>
-              </Badge>
-              <HStack className="items-center space-x-1">
-                <Calendar size={16} color="#6b7280" />
-                <Text className="text-typography-500">{announcement.date}</Text>
-              </HStack>
+              <BadgeText className="font-medium">
+                {announcement.priority}
+              </BadgeText>
+            </Badge>
+            <HStack className="items-center space-x-1">
+              <Calendar size={16} color="#6b7280" />
+              <Text className="text-typography-500">{announcement.date}</Text>
             </HStack>
-          </VStack>
-        </LinearGradient>
+          </HStack>
+        </VStack>
 
         {/* Description Section */}
         <View className="bg-background-50 p-4 rounded-xl">

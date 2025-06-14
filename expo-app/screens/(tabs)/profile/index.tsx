@@ -3,7 +3,6 @@ import React from "react";
 import { View, TouchableOpacity, ScrollView } from "react-native";
 import { VStack } from "@/components/ui/vstack";
 import { HStack } from "@/components/ui/hstack";
-import { Heading } from "@/components/ui/heading";
 import { Avatar, AvatarFallbackText } from "@/components/ui/avatar";
 import { Badge, BadgeText } from "@/components/ui/badge";
 import {
@@ -15,6 +14,12 @@ import {
   GraduationCap,
   Award,
   Clock,
+  User,
+  Shield,
+  Settings,
+  ChevronRight,
+  BookMarked,
+  Target,
 } from "lucide-react-native";
 import { useAuth } from "@/app/context/AuthContext";
 import { formatDistanceToNowStrict } from "date-fns";
@@ -89,11 +94,14 @@ const Profile = (props: Props) => {
   const selectedGradient = gradientPairs[gradientIndex];
 
   return (
-    <ScrollView className="flex-1 bg-white ">
-      <VStack className="flex-1 items-center p-4" space="lg">
+    <ScrollView className="flex-1 bg-white">
+      <VStack className="flex-1 items-center p-4" space="md">
         {/* Profile Header */}
         <VStack space="lg" className="items-center w-full">
-          <Avatar size="2xl" className="bg-transparent">
+          <Avatar
+            size="2xl"
+            className="bg-transparent items-center justify-center"
+          >
             <LinearGradient
               colors={selectedGradient}
               start={{ x: 0, y: 0 }}
@@ -117,120 +125,186 @@ const Profile = (props: Props) => {
             >
               {displayUserName}
             </Text>
-            <Text
-              className="text-lg text-typography-500 tracking-tight"
-              style={{ fontFamily: "BGSB" }}
-            >
-              Roll Number: {displayRollNumber}
-            </Text>
+            <HStack className="items-center space-x-2" space="sm">
+              <GraduationCap size={16} color="#6b7280" />
+              <Text
+                className="text-lg text-typography-500 tracking-tight"
+                style={{ fontFamily: "BGSB" }}
+              >
+                Roll Number: {displayRollNumber}
+              </Text>
+            </HStack>
           </VStack>
         </VStack>
 
         {/* Stats Cards */}
         <HStack className="w-full space-x-4" space="md">
-          <View className="flex-1 bg-background-50 p-4 rounded-xl">
-            <VStack space="xs">
-              <HStack className="items-center space-x-2">
+          <View className="flex-1 border border-border-300 p-4 rounded-xl">
+            <VStack space="xl" className="flex-1 justify-between h-full">
+              <HStack className="items-center space-x-2 " space="md">
                 <BookOpen size={20} color="#6b7280" />
                 <Text className="text-typography-500">Attendance</Text>
               </HStack>
-              <Text className="text-2xl font-bold text-typography-900">
-                85%
-              </Text>
+              <VStack space="xs">
+                <Text
+                  className="text-3xl text-typography-900"
+                  style={{ fontFamily: "BGSB" }}
+                >
+                  85%
+                </Text>
+                <Text className="text-xs text-typography-400">
+                  Last updated: Today
+                </Text>
+              </VStack>
             </VStack>
           </View>
-          <View className="flex-1 bg-background-50 p-4 rounded-xl">
-            <VStack space="xs">
-              <HStack className="items-center space-x-2">
+          <View className="flex-1 border border-border-300 min-h-40 p-4 rounded-xl">
+            <VStack space="xl" className="flex-1 justify-between h-full">
+              <HStack className="items-center space-x-2 " space="md">
                 <Award size={20} color="#6b7280" />
                 <Text className="text-typography-500">CGPA</Text>
               </HStack>
-              <Text className="text-2xl font-bold text-typography-900">
-                3.8
-              </Text>
+              <VStack space="xs">
+                <Text
+                  className="text-3xl text-typography-900"
+                  style={{ fontFamily: "BGSB" }}
+                >
+                  3.8
+                </Text>
+                <Text className="text-xs text-typography-400">
+                  Current Semester
+                </Text>
+              </VStack>
             </VStack>
           </View>
         </HStack>
 
         {/* Additional Stats */}
         <HStack className="w-full space-x-4" space="md">
-          <View className="flex-1 bg-background-50 p-4 rounded-xl">
-            <VStack space="xs">
-              <HStack className="items-center space-x-2">
+          <View className="flex-1 border border-border-300 p-4 min-h-40 rounded-xl">
+            <VStack space="xl" className="flex-1 justify-between h-full">
+              <HStack className="items-center space-x-2 " space="md">
                 <GraduationCap size={20} color="#6b7280" />
                 <Text className="text-typography-500">Semester</Text>
               </HStack>
-              <Text className="text-2xl font-bold text-typography-900">
-                4th
-              </Text>
+              <VStack space="xs">
+                <Text
+                  className="text-3xl text-typography-900"
+                  style={{ fontFamily: "BGSB" }}
+                >
+                  4th
+                </Text>
+                <Text className="text-xs text-typography-400">Out of 8</Text>
+              </VStack>
             </VStack>
           </View>
-          <View className="flex-1 bg-background-50 p-4 rounded-xl">
-            <VStack space="xs">
-              <HStack className="items-center space-x-2">
+          <View className="flex-1 border border-border-300 p-4 rounded-xl">
+            <VStack space="xl" className="flex-1 justify-between h-full">
+              <HStack className="items-center space-x-2 " space="md">
                 <Clock size={20} color="#6b7280" />
                 <Text className="text-typography-500">Credits</Text>
               </HStack>
-              <Text className="text-2xl font-bold text-typography-900">
-                120
-              </Text>
+              <VStack space="xs">
+                <Text
+                  className="text-3xl text-typography-900"
+                  style={{ fontFamily: "BGSB" }}
+                >
+                  120
+                </Text>
+                <Text className="text-xs text-typography-400">
+                  Required: 160
+                </Text>
+              </VStack>
             </VStack>
           </View>
         </HStack>
 
         {/* Contact Information */}
-        <View className="w-full bg-background-50 p-4 rounded-xl">
-          <VStack space="md">
-            <Text className="text-lg font-semibold text-typography-900">
-              Contact Information
-            </Text>
+        <View className="w-full bg-background-50 border-border-200 border rounded-xl">
+          <VStack className="w-full">
+            <HStack className="items-center justify-between p-2 py-4  border-b border-border-200">
+              <HStack className="items-center space-x-2" space="md">
+                <User size={20} color="#6b7280" />
+                <Text className="text-lg font-semibold text-typography-900">
+                  Contact Information
+                </Text>
+              </HStack>
+              <TouchableOpacity>
+                <ChevronRight size={20} color="#6b7280" />
+              </TouchableOpacity>
+            </HStack>
             {user?.email && (
-              <HStack space="xs" className="items-center">
+              <HStack
+                space="md"
+                className="items-center p-2 py-4 border-b border-border-200"
+              >
                 <Mail size={16} color="#6b7280" />
                 <Text className="text-typography-500">{user.email}</Text>
               </HStack>
             )}
             {user?.phoneNumber && (
-              <HStack space="xs" className="items-center">
+              <HStack
+                space="md"
+                className="items-center p-2 py-4 border-b border-border-200"
+              >
                 <Phone size={16} color="#6b7280" />
                 <Text className="text-typography-500">{user.phoneNumber}</Text>
               </HStack>
             )}
-            <HStack space="xs" className="items-center">
-              <Calendar size={16} color="#6b7280" />
-              <Text className="text-typography-500">Joined {joinedAgo}</Text>
-            </HStack>
+
+            <VStack>
+              <HStack className="items-center justify-between p-2 py-4 border-b border-border-200">
+                <HStack className="items-center space-x-2" space="md">
+                  <Shield size={20} color="#6b7280" />
+                  <Text className="text-lg font-semibold text-typography-900">
+                    Account Information
+                  </Text>
+                </HStack>
+                <TouchableOpacity>
+                  <ChevronRight size={20} color="#6b7280" />
+                </TouchableOpacity>
+              </HStack>
+              <HStack
+                space="xs"
+                className="items-center p-2 py-4 border-b border-border-200"
+              >
+                <Badge
+                  className="rounded-md px-2 py-[1px] bg-background-100"
+                  variant="outline"
+                  action="muted"
+                  size="sm"
+                >
+                  <BadgeText className="text-xs font-bold text-primary-900">
+                    Logged in with {loginMethod}
+                  </BadgeText>
+                </Badge>
+              </HStack>
+              <HStack space="md" className="items-center p-2 py-4">
+                <Calendar size={16} color="#6b7280" />
+                <Text className="text-typography-500">Joined {joinedAgo}</Text>
+              </HStack>
+            </VStack>
           </VStack>
         </View>
 
-        {/* Account Information */}
-        <View className="w-full bg-background-50 p-4 rounded-xl">
-          <VStack space="md">
+        {/* Settings Button */}
+        <TouchableOpacity className="w-full flex-row items-center justify-between bg-background-50 p-4 rounded-xl border border-border-200">
+          <HStack className="items-center space-x-2" space="md">
+            <Settings size={20} color="#6b7280" />
             <Text className="text-lg font-semibold text-typography-900">
-              Account Information
+              Settings
             </Text>
-            <HStack space="xs" className="items-center">
-              <Badge
-                className="rounded-md px-2 py-[1px] bg-background-100"
-                variant="outline"
-                action="muted"
-                size="sm"
-              >
-                <BadgeText className="text-xs font-bold text-primary-900">
-                  Logged in with {loginMethod}
-                </BadgeText>
-              </Badge>
-            </HStack>
-          </VStack>
-        </View>
+          </HStack>
+          <ChevronRight size={20} color="#6b7280" />
+        </TouchableOpacity>
 
         {/* Logout Button */}
         <TouchableOpacity
           onPress={() => setShowLogoutSheet(true)}
-          className="w-full flex-row items-center justify-center bg-background-500 px-6 py-3 rounded-lg"
+          className="w-full flex-row items-center justify-center bg-background-900 px-6 py-3 rounded-lg"
         >
           <LogOut size={20} color="white" />
-          <Text className="text-white ml-2 font-semibold">Logout</Text>
+          <Text className="text-white ml-2 text-lg font-bold">Logout</Text>
         </TouchableOpacity>
         <View className="h-16" />
       </VStack>

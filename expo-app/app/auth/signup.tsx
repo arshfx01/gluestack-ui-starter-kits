@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { View, Text, TextInput, TouchableOpacity, Alert } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import {
   createUserWithEmailAndPassword,
   PhoneAuthProvider,
@@ -8,7 +8,14 @@ import {
 } from "firebase/auth";
 import { auth, db } from "../config/firebase";
 import { router, useRouter } from "expo-router";
-import { doc, setDoc } from "firebase/firestore";
+import {
+  doc,
+  setDoc,
+  collection,
+  query,
+  where,
+  getDocs,
+} from "firebase/firestore";
 import {
   Mail,
   Lock,
@@ -26,10 +33,14 @@ import { HStack } from "@/components/ui/hstack";
 import { FirebaseRecaptchaVerifierModal } from "expo-firebase-recaptcha";
 import type { FirebaseRecaptchaVerifierModal as RecaptchaVerifierModalType } from "expo-firebase-recaptcha";
 import { useAuth } from "../context/AuthContext";
+import { useToast } from "@/components/ui/toast";
+
+import { TextInput } from "react-native";
 
 export default function SignUp() {
   const router = useRouter();
   const { user } = useAuth();
+  const toast = useToast();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -49,19 +60,69 @@ export default function SignUp() {
     }
   }, [user]);
 
+  const checkExistingUser = async (field: string, value: string) => {
+    const usersRef = collection(db, "users");
+    const q = query(usersRef, where(field, "==", value));
+    const querySnapshot = await getDocs(q);
+    return !querySnapshot.empty;
+  };
+
   const handleEmailSignUp = async () => {
     if (!email || !password || !confirmPassword || !fullName || !rollNo) {
-      Alert.alert("Error", "Please fill in all fields");
+      toast.show({
+        render: () => (
+          <View className="bg-error-500 p-4 rounded-lg">
+            <Text className="text-white">Please fill in all fields</Text>
+          </View>
+        ),
+      });
       return;
     }
 
     if (password !== confirmPassword) {
-      Alert.alert("Error", "Passwords do not match");
+      toast.show({
+        render: () => (
+          <View className="bg-error-500 p-4 rounded-lg">
+            <Text className="text-white">Passwords do not match</Text>
+          </View>
+        ),
+      });
       return;
     }
 
     try {
       setLoading(true);
+
+      // Check if roll number already exists
+      const rollNoExists = await checkExistingUser("rollNo", rollNo);
+      if (rollNoExists) {
+        toast.show({
+          render: () => (
+            <View className="bg-error-500 p-4 rounded-lg">
+              <Text className="text-white">
+                This Roll Number is already registered
+              </Text>
+            </View>
+          ),
+        });
+        return;
+      }
+
+      // Check if email already exists
+      const emailExists = await checkExistingUser("email", email);
+      if (emailExists) {
+        toast.show({
+          render: () => (
+            <View className="bg-error-500 p-4 rounded-lg">
+              <Text className="text-white">
+                This email is already registered
+              </Text>
+            </View>
+          ),
+        });
+        return;
+      }
+
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         email,
@@ -72,11 +133,25 @@ export default function SignUp() {
         fullName,
         rollNo,
         email: userCredential.user.email,
+        createdAt: new Date().toISOString(),
       });
 
+      toast.show({
+        render: () => (
+          <View className="bg-success-500 p-4 rounded-lg">
+            <Text className="text-white">Account created successfully</Text>
+          </View>
+        ),
+      });
       router.replace("/(tabs)");
     } catch (error: any) {
-      Alert.alert("Error", error.message);
+      toast.show({
+        render: () => (
+          <View className="bg-error-500 p-4 rounded-lg">
+            <Text className="text-white">{error.message}</Text>
+          </View>
+        ),
+      });
     } finally {
       setLoading(false);
     }
@@ -84,17 +159,57 @@ export default function SignUp() {
 
   const handlePhoneSignUp = async () => {
     if (!fullName || !rollNo || !phoneNumber) {
-      Alert.alert("Error", "Please fill in all fields");
+      toast.show({
+        render: () => (
+          <View className="bg-error-500 p-4 rounded-lg">
+            <Text className="text-white">Please fill in all fields</Text>
+          </View>
+        ),
+      });
       return;
     }
 
     try {
       setLoading(true);
+
+      // Check if roll number already exists
+      const rollNoExists = await checkExistingUser("rollNo", rollNo);
+      if (rollNoExists) {
+        toast.show({
+          render: () => (
+            <View className="bg-error-500 p-4 rounded-lg">
+              <Text className="text-white">
+                This Roll Number is already registered
+              </Text>
+            </View>
+          ),
+        });
+        return;
+      }
+
+      // Check if phone number already exists
+      const formattedPhoneNumber = `+91${phoneNumber}`;
+      const phoneExists = await checkExistingUser(
+        "phoneNumber",
+        formattedPhoneNumber
+      );
+      if (phoneExists) {
+        toast.show({
+          render: () => (
+            <View className="bg-error-500 p-4 rounded-lg">
+              <Text className="text-white">
+                This phone number is already registered
+              </Text>
+            </View>
+          ),
+        });
+        return;
+      }
+
       if (!recaptchaVerifier.current) {
         throw new Error("reCAPTCHA not initialized");
       }
 
-      const formattedPhoneNumber = `+91${phoneNumber}`;
       const confirmation = await signInWithPhoneNumber(
         auth,
         formattedPhoneNumber,
@@ -102,9 +217,25 @@ export default function SignUp() {
       );
       setVerificationId(confirmation.verificationId);
       setShowVerificationInput(true);
-      Alert.alert("Success", "Verification code sent to your phone");
+      toast.show({
+        render: () => (
+          <View className="bg-success-500 p-4 rounded-lg">
+            <Text className="text-white">
+              Verification code sent to your phone
+            </Text>
+          </View>
+        ),
+      });
     } catch (error: any) {
-      Alert.alert("Error", error.message || "Failed to send verification code");
+      toast.show({
+        render: () => (
+          <View className="bg-error-500 p-4 rounded-lg">
+            <Text className="text-white">
+              {error.message || "Failed to send verification code"}
+            </Text>
+          </View>
+        ),
+      });
     } finally {
       setLoading(false);
     }
@@ -112,7 +243,15 @@ export default function SignUp() {
 
   const verifyCode = async () => {
     if (!verificationCode) {
-      Alert.alert("Error", "Please enter the verification code");
+      toast.show({
+        render: () => (
+          <View className="bg-error-500 p-4 rounded-lg">
+            <Text className="text-white">
+              Please enter the verification code
+            </Text>
+          </View>
+        ),
+      });
       return;
     }
 
@@ -129,11 +268,25 @@ export default function SignUp() {
         fullName,
         rollNo,
         phoneNumber: userCredential.user.phoneNumber,
+        createdAt: new Date().toISOString(),
       });
 
+      toast.show({
+        render: () => (
+          <View className="bg-success-500 p-4 rounded-lg">
+            <Text className="text-white">Account created successfully</Text>
+          </View>
+        ),
+      });
       router.replace("/(tabs)");
     } catch (error: any) {
-      Alert.alert("Error", error.message);
+      toast.show({
+        render: () => (
+          <View className="bg-error-500 p-4 rounded-lg">
+            <Text className="text-white">{error.message}</Text>
+          </View>
+        ),
+      });
     } finally {
       setLoading(false);
     }
@@ -157,7 +310,7 @@ export default function SignUp() {
           alt="logo"
           className="w-20 h-20 rounded-full mb-4"
         />
-        <Text className="text-3xl  text-center" style={{ fontFamily: "BGSB" }}>
+        <Text className="text-3xl text-center" style={{ fontFamily: "BGSB" }}>
           Create Account
         </Text>
         <Text
