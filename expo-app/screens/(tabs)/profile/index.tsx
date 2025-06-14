@@ -4,11 +4,7 @@ import { View, TouchableOpacity } from "react-native";
 import { VStack } from "@/components/ui/vstack";
 import { HStack } from "@/components/ui/hstack";
 import { Heading } from "@/components/ui/heading";
-import {
-  Avatar,
-  AvatarFallbackText,
-  AvatarImage,
-} from "@/components/ui/avatar";
+import { Avatar, AvatarFallbackText } from "@/components/ui/avatar";
 import { Badge, BadgeText } from "@/components/ui/badge";
 import { Calendar, Mail, Phone, LogOut } from "lucide-react-native";
 import { useAuth } from "@/app/context/AuthContext";
@@ -25,8 +21,28 @@ import {
   ActionsheetDragIndicatorWrapper,
   ActionsheetBackdrop,
 } from "@/components/ui/actionsheet";
+import { LinearGradient } from "expo-linear-gradient";
 
 type Props = {};
+
+// Function to hash a string and map it to an index
+const hashStringToIndex = (str: string, max: number) => {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    hash = (hash << 5) - hash + str.charCodeAt(i);
+    hash = hash & hash; // Convert to 32-bit integer
+  }
+  return Math.abs(hash) % max;
+};
+
+// Define an array of gradient pairs
+const gradientPairs = [
+  ["#d946ef", "#a855f7"], // Pink to Purple
+  ["#3b82f6", "#22d3ee"], // Blue to Cyan
+  ["#f97316", "#facc15"], // Orange to Yellow
+  ["#10b981", "#34d399"], // Green to Light Green
+  ["#ef4444", "#f87171"], // Red to Light Red
+];
 
 const Profile = (props: Props) => {
   const { user, userProfile } = useAuth();
@@ -55,26 +71,37 @@ const Profile = (props: Props) => {
 
   const displayUserName = userProfile?.fullName || "Guest User";
   const displayRollNumber = userProfile?.rollNo || "N/A";
-  const displayProfilePictureUri = userProfile?.email
-    ? `https://ui-avatars.com/api/?name=${encodeURIComponent(
-        userProfile.fullName
-      )}&background=random&size=256`
-    : "https://img.freepik.com/free-photo/abstract-luxury-gradient-blue-background-smooth-dark-blue-with-black-vignette-studio-banner_1258-100541.jpg?semt=ais_hybrid&w=740";
+
+  // Select gradient based on the user's name
+  const gradientIndex = hashStringToIndex(
+    displayUserName,
+    gradientPairs.length
+  );
+  const selectedGradient = gradientPairs[gradientIndex];
 
   return (
     <VStack className="flex-1 items-center justify-center p-4 bg-white">
       <VStack space="lg" className="items-center">
-        <Avatar size="2xl" className="bg-background-200">
-          <AvatarFallbackText>{displayUserName.charAt(0)}</AvatarFallbackText>
-          <AvatarImage
-            source={{ uri: displayProfilePictureUri }}
-            alt="Profile Picture"
+        <Avatar size="2xl" className="bg-transparent">
+          <LinearGradient
+            colors={selectedGradient} // Dynamic gradient based on name
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={{
+              position: "absolute",
+              width: "100%",
+              height: "100%",
+              borderRadius: 9999, // Ensures the gradient is circular
+            }}
           />
+          <AvatarFallbackText className="text-white text-4xl">
+            {displayUserName.charAt(0)}
+          </AvatarFallbackText>
         </Avatar>
 
         <VStack space="xs" className="items-center">
           <Text
-            className="text-3xl  text-center  text-background-950"
+            className="text-3xl text-center text-background-950"
             style={{ fontFamily: "BGSB" }}
           >
             {displayUserName}
@@ -129,21 +156,6 @@ const Profile = (props: Props) => {
             <Text className="text-white ml-2 font-semibold">Logout</Text>
           </TouchableOpacity>
         </VStack>
-
-        {/* Example of additional sections if needed 
-        
-        <View className="w-full mt-8 p-4 border border-border-200 rounded-xl bg-background-50">
-          <VStack space="sm">
-            <Text className="text-base font-semibold text-background-950">
-              About Me
-            </Text>
-            <Text className="text-sm text-typography-600">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua.
-            </Text>
-          </VStack>
-        </View>
-                */}
       </VStack>
 
       <Actionsheet
@@ -152,7 +164,7 @@ const Profile = (props: Props) => {
       >
         <ActionsheetBackdrop />
         <ActionsheetContent>
-          <VStack space="md" className="justify-center w-full items-center ">
+          <VStack space="md" className="justify-center w-full items-center">
             <ActionsheetDragIndicatorWrapper>
               <ActionsheetDragIndicator />
             </ActionsheetDragIndicatorWrapper>
@@ -176,7 +188,7 @@ const Profile = (props: Props) => {
             </ActionsheetItem>
             <ActionsheetItem
               onPress={() => setShowLogoutSheet(false)}
-              className="bg-backgroun0 rounded-lg w-full flex justify-center items-center"
+              className="bg-background-0 rounded-lg w-full flex justify-center items-center"
             >
               <ActionsheetItemText className="text-lg font-semibold text-center text-background-950">
                 Cancel

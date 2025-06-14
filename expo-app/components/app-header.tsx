@@ -1,6 +1,6 @@
 import { HStack } from "@/components/ui/hstack";
 import { Heading } from "@/components/ui/heading";
-import { Touchable, TouchableOpacity, View } from "react-native";
+import { TouchableOpacity, View } from "react-native";
 import { Image } from "@/components/ui/image";
 import {
   ArrowRight,
@@ -13,14 +13,41 @@ import {
   Avatar,
   AvatarBadge,
   AvatarFallbackText,
-  AvatarImage,
 } from "@/components/ui/avatar";
-import { VStack } from "./vstack";
-import { Badge, BadgeText } from "./badge";
-import { Text } from "./text";
 import { router } from "expo-router";
+import { VStack } from "./ui/vstack";
+import { Text } from "./ui/text";
+import { Badge, BadgeText } from "./ui/badge";
+import { useAuth } from "@/app/context/AuthContext";
+import { LinearGradient } from "expo-linear-gradient";
+
+// Function to hash a string and map it to an index
+const hashStringToIndex = (str: string, max: number) => {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    hash = (hash << 5) - hash + str.charCodeAt(i);
+    hash = hash & hash; // Convert to 32-bit integer
+  }
+  return Math.abs(hash) % max;
+};
+
+// Define an array of gradient pairs
+const gradientPairs = [
+  ["#d946ef", "#a855f7"], // Pink to Purple
+  ["#3b82f6", "#22d3ee"], // Blue to Cyan
+  ["#f97316", "#facc15"], // Orange to Yellow
+  ["#10b981", "#34d399"], // Green to Light Green
+  ["#ef4444", "#f87171"], // Red to Light Red
+];
 
 export const AppHeader = () => {
+  const { userProfile } = useAuth();
+  const userFullName = userProfile?.fullName || "Guest User";
+
+  // Select gradient based on the user's name
+  const gradientIndex = hashStringToIndex(userFullName, gradientPairs.length);
+  const selectedGradient = gradientPairs[gradientIndex];
+
   return (
     <VStack>
       <HStack className="flex py-4 px-4 border-b border-border-100 justify-between w-full bg-[#fff]">
@@ -64,8 +91,24 @@ export const AppHeader = () => {
               router.push("/(tabs)/profile");
             }}
           >
-            <Avatar size="md">
-              <AvatarFallbackText>Ar</AvatarFallbackText>
+            <Avatar
+              size="md"
+              className="border border-border-200 bg-transparent"
+            >
+              <LinearGradient
+                colors={selectedGradient} // Dynamic gradient based on name
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+                style={{
+                  position: "absolute",
+                  width: "100%",
+                  height: "100%",
+                  borderRadius: 9999, // Ensures the gradient is circular
+                }}
+              />
+              <AvatarFallbackText className="text-white text-xl">
+                {userFullName.charAt(0)}
+              </AvatarFallbackText>
               <AvatarBadge />
             </Avatar>
           </TouchableOpacity>

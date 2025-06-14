@@ -11,7 +11,7 @@ import { useEffect } from "react";
 import { GluestackUIProvider } from "@/components/ui/gluestack-ui-provider";
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
-import { AppHeader } from "@/components/ui/app-header";
+import { AppHeader } from "@/components/app-header";
 import BottomBtns from "@/components/BottomBtns";
 import "../global.css";
 import { AuthProvider, useAuth } from "./context/AuthContext";
