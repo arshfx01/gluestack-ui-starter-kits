@@ -94,15 +94,7 @@ function RootLayoutNav() {
           <StatusBar style="dark" />
           <SafeAreaView style={{ flex: 1 }}>
             {user && <AppHeader />}
-            <Stack screenOptions={{ headerShown: false }}>
-              <Stack.Screen name="signin" />
-              <Stack.Screen name="signup" />
-              <Stack.Screen name="forgot-password" />
-              <Stack.Screen name="create-password" />
-              <Stack.Screen name="news-feed" />
-              <Stack.Screen name="dashboard" />
-              <Stack.Screen name="profile" />
-            </Stack>
+            <Stack screenOptions={{ headerShown: false }}></Stack>
             {user && <BottomBtns />}
           </SafeAreaView>
         </ThemeProvider>

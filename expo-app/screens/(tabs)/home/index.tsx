@@ -34,6 +34,7 @@ import { useAuth } from "@/app/context/AuthContext";
 import { SettingsLayout } from "@/screens/settings/layout";
 import { AttendanceGrowthChart } from "@/components/AttendanceGrowthChart";
 import { AnnouncementCard } from "@/components/AnnouncementCard";
+import AnnouncementWidget from "@/components/AnnouncementsWidget";
 
 const Homepage = () => {
   const { userProfile } = useAuth();
@@ -154,47 +155,7 @@ const Homepage = () => {
             </GridItem>
           </Grid>
           <Divider />
-          <HStack className="w-full flex gap-4  items-center justify-start">
-            <View className="px-3 py-1 border border-border-300 bg-background-100 rounded-md ">
-              <HStack className="flex gap-2  items-center">
-                <Text className="text-base  font-normal text-[#000000]">
-                  Announcements
-                </Text>
-                <Text>2</Text>
-              </HStack>
-            </View>
-            <View className="px-3 py-1  rounded-md ">
-              <Text className="text-base font-normal text-[#aeaeae]">
-                Timeline
-              </Text>
-            </View>
-            <View className="px-3 py-1  rounded-md ">
-              <Text className="text-base font-normal text-[#aeaeae]">Top</Text>
-            </View>
-          </HStack>
-          <VStack space="md" className="w-full">
-            <AnnouncementCard
-              title="Important Exam Dates Announced!"
-              description="Please follow & check the official notice board for the updated mid-term examination schedule and guidelines."
-              postedBy="Administration"
-              postedWhen="2 hours ago"
-              priority="High"
-            />
-            <AnnouncementCard
-              title="Final dates for Mid-Term Exams Released"
-              description="The final dates for the mid-term exams have been released. Please check the official website for details."
-              postedBy="Administration"
-              postedWhen="2 hours ago"
-              priority="Medium"
-            />
-            <AnnouncementCard
-              title="Due to unforeseen circumstances, the Lab Internals have been postponed."
-              description="The final dates for the mid-term exams have been released. Please check the official website for details."
-              postedBy="Administration"
-              postedWhen="2 hours ago"
-              priority="Medium"
-            />
-          </VStack>
+          <AnnouncementWidget />
         </VStack>
         <ClassSchedule
           currentClass={{

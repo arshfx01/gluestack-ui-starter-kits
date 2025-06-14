@@ -1,5 +1,5 @@
 import React from "react";
-import { View } from "react-native";
+import { View, TouchableOpacity } from "react-native";
 import { VStack } from "@/components/ui/vstack";
 import { HStack } from "@/components/ui/hstack";
 import { Text } from "@/components/ui/text";
@@ -13,8 +13,10 @@ import {
   Info,
   Bell,
 } from "lucide-react-native";
+import { router } from "expo-router";
 
 export type AnnouncementCardProps = {
+  id: string;
   title: string;
   description: string;
   postedBy: string;
@@ -23,6 +25,7 @@ export type AnnouncementCardProps = {
 };
 
 export const AnnouncementCard = ({
+  id,
   title,
   description,
   postedBy,
@@ -59,42 +62,30 @@ export const AnnouncementCard = ({
   const { badgeBg, badgeText, borderColor, icon } = getPriorityColors();
 
   return (
-    <View className="w-full bg-background-100  border rounded-xl border-border-300">
-      <VStack space="md" className="w-full">
-        <HStack className="justify-between border-b border-border-300 p-3 w-full flex items-center">
-          <HStack space="sm" className="items-center flex justify-start">
-            <View className="p-2 rounded-lg bg-background-200">{icon}</View>
-            <Text
-              className="text-lg flex-1 max-w-[100%] text-[#000]"
-              style={{ fontFamily: "BGSB", color: "#000" }}
-              numberOfLines={2}
-              ellipsizeMode="tail"
+    <TouchableOpacity
+      onPress={() => router.push(`/announcements/${id}`)}
+      className="bg-white p-4 rounded-lg border border-border-300"
+    >
+      <VStack space="sm">
+        <Text className="text-lg font-bold">{title}</Text>
+        <Text className="text-typography-600" numberOfLines={2}>
+          {description}
+        </Text>
+        <HStack className="justify-between items-center">
+          <HStack className="items-center space-x-2">
+            <Badge
+              variant="outline"
+              action={priority === "High" ? "error" : "muted"}
             >
-              {title}
+              <BadgeText>{priority}</BadgeText>
+            </Badge>
+            <Text className="text-typography-500 text-sm">
+              Posted by {postedBy}
             </Text>
           </HStack>
+          <Text className="text-typography-500 text-sm">{postedWhen}</Text>
         </HStack>
-
-        <VStack space="md" className="px-3 pb-3">
-          <Text
-            className="text-sm p-1 text-typography-600"
-            style={{ fontFamily: "BGSB" }}
-            numberOfLines={2}
-          >
-            {description}
-          </Text>
-          <HStack className="justify-between items-center">
-            <HStack space="xs" className="items-center">
-              <User size={12} color="#6b7280" />
-              <Text className="text-xs text-typography-400">{postedBy}</Text>
-            </HStack>
-            <HStack space="xs" className="items-center">
-              <Clock size={12} color="#6b7280" />
-              <Text className="text-xs text-typography-400">{postedWhen}</Text>
-            </HStack>
-          </HStack>
-        </VStack>
       </VStack>
-    </View>
+    </TouchableOpacity>
   );
 };

@@ -22,10 +22,9 @@ const BottomBtns = (props: Props) => {
   return (
     <LinearGradient
       colors={["transparent", "#FFFFFF", "#FFFFFF"]}
-      locations={[0, 0.5, 1]}
       start={{ x: 0.5, y: 0 }}
       end={{ x: 0.5, y: 1 }}
-      className="absolute  bottom-0 left-0 right-0 p-4 px-6 "
+      className="absolute  bottom-0 left-0 right-0  px-6 "
     >
       <HStack className="flex items-center justify-between">
         <TouchableOpacity
