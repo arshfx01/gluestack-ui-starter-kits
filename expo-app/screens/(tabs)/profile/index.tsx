@@ -1,12 +1,21 @@
 import { Text } from "@/components/ui/text";
 import React from "react";
-import { View, TouchableOpacity } from "react-native";
+import { View, TouchableOpacity, ScrollView } from "react-native";
 import { VStack } from "@/components/ui/vstack";
 import { HStack } from "@/components/ui/hstack";
 import { Heading } from "@/components/ui/heading";
 import { Avatar, AvatarFallbackText } from "@/components/ui/avatar";
 import { Badge, BadgeText } from "@/components/ui/badge";
-import { Calendar, Mail, Phone, LogOut } from "lucide-react-native";
+import {
+  Calendar,
+  Mail,
+  Phone,
+  LogOut,
+  BookOpen,
+  GraduationCap,
+  Award,
+  Clock,
+} from "lucide-react-native";
 import { useAuth } from "@/app/context/AuthContext";
 import { formatDistanceToNowStrict } from "date-fns";
 import { auth } from "@/app/config/firebase";
@@ -80,82 +89,150 @@ const Profile = (props: Props) => {
   const selectedGradient = gradientPairs[gradientIndex];
 
   return (
-    <VStack className="flex-1 items-center justify-center p-4 bg-white">
-      <VStack space="lg" className="items-center">
-        <Avatar size="2xl" className="bg-transparent">
-          <LinearGradient
-            colors={selectedGradient} // Dynamic gradient based on name
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 1 }}
-            style={{
-              position: "absolute",
-              width: "100%",
-              height: "100%",
-              borderRadius: 9999, // Ensures the gradient is circular
-            }}
-          />
-          <AvatarFallbackText className="text-white text-4xl">
-            {displayUserName.charAt(0)}
-          </AvatarFallbackText>
-        </Avatar>
+    <ScrollView className="flex-1 bg-white ">
+      <VStack className="flex-1 items-center p-4" space="lg">
+        {/* Profile Header */}
+        <VStack space="lg" className="items-center w-full">
+          <Avatar size="2xl" className="bg-transparent">
+            <LinearGradient
+              colors={selectedGradient}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              style={{
+                position: "absolute",
+                width: "100%",
+                height: "100%",
+                borderRadius: 9999,
+              }}
+            />
+            <AvatarFallbackText className="text-white text-4xl">
+              {displayUserName.charAt(0)}
+            </AvatarFallbackText>
+          </Avatar>
 
-        <VStack space="xs" className="items-center">
-          <Text
-            className="text-3xl text-center text-background-950"
-            style={{ fontFamily: "BGSB" }}
-          >
-            {displayUserName}
-          </Text>
-          <Text
-            className="text-lg text-typography-500 tracking-tight"
-            style={{ fontFamily: "BGSB" }}
-          >
-            Roll Number: {displayRollNumber}
-          </Text>
-          <HStack space="xs" className="items-center mt-2">
-            <Calendar size={16} color="#6b7280" />
-            <Text className="text-sm text-typography-400">
-              Joined {joinedAgo}
-            </Text>
-          </HStack>
-
-          {user?.email && (
-            <HStack space="xs" className="items-center mt-1">
-              <Mail size={16} color="#6b7280" />
-              <Text className="text-sm text-typography-400">{user.email}</Text>
-            </HStack>
-          )}
-
-          {user?.phoneNumber && (
-            <HStack space="xs" className="items-center mt-1">
-              <Phone size={16} color="#6b7280" />
-              <Text className="text-sm text-typography-400">
-                {user.phoneNumber}
-              </Text>
-            </HStack>
-          )}
-
-          <HStack space="xs" className="items-center mt-1">
-            <Badge
-              className="rounded-md px-2 py-[1px] bg-background-100"
-              variant="outline"
-              action="muted"
-              size="sm"
+          <VStack space="xs" className="items-center">
+            <Text
+              className="text-3xl text-center text-background-950"
+              style={{ fontFamily: "BGSB" }}
             >
-              <BadgeText className="text-xs font-bold text-primary-900">
-                Logged in with {loginMethod}
-              </BadgeText>
-            </Badge>
-          </HStack>
-
-          <TouchableOpacity
-            onPress={() => setShowLogoutSheet(true)}
-            className="mt-8 flex-row items-center justify-center bg-background-500 px-6 py-3 rounded-lg"
-          >
-            <LogOut size={20} color="white" />
-            <Text className="text-white ml-2 font-semibold">Logout</Text>
-          </TouchableOpacity>
+              {displayUserName}
+            </Text>
+            <Text
+              className="text-lg text-typography-500 tracking-tight"
+              style={{ fontFamily: "BGSB" }}
+            >
+              Roll Number: {displayRollNumber}
+            </Text>
+          </VStack>
         </VStack>
+
+        {/* Stats Cards */}
+        <HStack className="w-full space-x-4" space="md">
+          <View className="flex-1 bg-background-50 p-4 rounded-xl">
+            <VStack space="xs">
+              <HStack className="items-center space-x-2">
+                <BookOpen size={20} color="#6b7280" />
+                <Text className="text-typography-500">Attendance</Text>
+              </HStack>
+              <Text className="text-2xl font-bold text-typography-900">
+                85%
+              </Text>
+            </VStack>
+          </View>
+          <View className="flex-1 bg-background-50 p-4 rounded-xl">
+            <VStack space="xs">
+              <HStack className="items-center space-x-2">
+                <Award size={20} color="#6b7280" />
+                <Text className="text-typography-500">CGPA</Text>
+              </HStack>
+              <Text className="text-2xl font-bold text-typography-900">
+                3.8
+              </Text>
+            </VStack>
+          </View>
+        </HStack>
+
+        {/* Additional Stats */}
+        <HStack className="w-full space-x-4" space="md">
+          <View className="flex-1 bg-background-50 p-4 rounded-xl">
+            <VStack space="xs">
+              <HStack className="items-center space-x-2">
+                <GraduationCap size={20} color="#6b7280" />
+                <Text className="text-typography-500">Semester</Text>
+              </HStack>
+              <Text className="text-2xl font-bold text-typography-900">
+                4th
+              </Text>
+            </VStack>
+          </View>
+          <View className="flex-1 bg-background-50 p-4 rounded-xl">
+            <VStack space="xs">
+              <HStack className="items-center space-x-2">
+                <Clock size={20} color="#6b7280" />
+                <Text className="text-typography-500">Credits</Text>
+              </HStack>
+              <Text className="text-2xl font-bold text-typography-900">
+                120
+              </Text>
+            </VStack>
+          </View>
+        </HStack>
+
+        {/* Contact Information */}
+        <View className="w-full bg-background-50 p-4 rounded-xl">
+          <VStack space="md">
+            <Text className="text-lg font-semibold text-typography-900">
+              Contact Information
+            </Text>
+            {user?.email && (
+              <HStack space="xs" className="items-center">
+                <Mail size={16} color="#6b7280" />
+                <Text className="text-typography-500">{user.email}</Text>
+              </HStack>
+            )}
+            {user?.phoneNumber && (
+              <HStack space="xs" className="items-center">
+                <Phone size={16} color="#6b7280" />
+                <Text className="text-typography-500">{user.phoneNumber}</Text>
+              </HStack>
+            )}
+            <HStack space="xs" className="items-center">
+              <Calendar size={16} color="#6b7280" />
+              <Text className="text-typography-500">Joined {joinedAgo}</Text>
+            </HStack>
+          </VStack>
+        </View>
+
+        {/* Account Information */}
+        <View className="w-full bg-background-50 p-4 rounded-xl">
+          <VStack space="md">
+            <Text className="text-lg font-semibold text-typography-900">
+              Account Information
+            </Text>
+            <HStack space="xs" className="items-center">
+              <Badge
+                className="rounded-md px-2 py-[1px] bg-background-100"
+                variant="outline"
+                action="muted"
+                size="sm"
+              >
+                <BadgeText className="text-xs font-bold text-primary-900">
+                  Logged in with {loginMethod}
+                </BadgeText>
+              </Badge>
+            </HStack>
+          </VStack>
+        </View>
+
+        {/* Logout Button */}
+        <TouchableOpacity
+          onPress={() => setShowLogoutSheet(true)}
+          className="w-full flex-row items-center justify-center bg-background-500 px-6 py-3 rounded-lg"
+        >
+          <LogOut size={20} color="white" />
+          <Text className="text-white ml-2 font-semibold">Logout</Text>
+        </TouchableOpacity>
+        <View className="h-16" />
       </VStack>
 
       <Actionsheet
@@ -197,7 +274,7 @@ const Profile = (props: Props) => {
           </VStack>
         </ActionsheetContent>
       </Actionsheet>
-    </VStack>
+    </ScrollView>
   );
 };
 
