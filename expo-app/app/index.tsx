@@ -9,7 +9,7 @@ const Index = () => {
     return null;
   }
 
-  return <Redirect href={user ? "/(tabs)" : "/auth/signin"} />;
+  return <Redirect href={user ? "/(tabs)" : "/auth/splash-screen"} />;
 };
 
 export default Index;

@@ -15,23 +15,28 @@ import { TouchableOpacity } from "react-native";
 import { router } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
 import { HomeIcon } from "./HomeIcon";
+import { useBottomBtns } from "../hooks/useBottomBtns";
 
 type Props = {};
 
 const BottomBtns = (props: Props) => {
+  const { isVisible } = useBottomBtns();
+
+  if (!isVisible) return null;
+
   return (
     <LinearGradient
       colors={["transparent", "#FFFFFF", "#FFFFFF"]}
       start={{ x: 0.5, y: 0 }}
       end={{ x: 0.5, y: 1 }}
-      className="absolute  bottom-0 left-0 right-0  px-6 "
+      className="absolute bottom-0 left-0 right-0 px-6"
     >
       <HStack className="flex items-center justify-between">
         <TouchableOpacity
           onPress={() => {
             router.push("/(tabs)");
           }}
-          className=" bg-white/50 border border-background-200 rounded-full p-4 hover:bg-background-200 flex items-center justify-center"
+          className="bg-white/50 border border-background-200 rounded-full p-4 hover:bg-background-200 flex items-center justify-center"
         >
           <HomeIcon color="#5c5c5c" width={24} height={24} />
         </TouchableOpacity>

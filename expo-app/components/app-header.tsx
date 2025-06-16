@@ -1,7 +1,7 @@
 import React from "react";
 import { HStack } from "@/components/ui/hstack";
 import { Heading } from "@/components/ui/heading";
-import { TouchableOpacity, View } from "react-native";
+import { Pressable, TouchableOpacity, View } from "react-native";
 import { Image } from "@/components/ui/image";
 import {
   ArrowLeft,
@@ -24,6 +24,7 @@ import { Text } from "./ui/text";
 import { Badge, BadgeText } from "./ui/badge";
 import { useAuth } from "@/app/context/AuthContext";
 import { LinearGradient } from "expo-linear-gradient";
+import { gradientPairs } from "@/constants/gradients";
 
 // Function to hash a string and map it to an index
 const hashStringToIndex = (str: string, max: number) => {
@@ -34,15 +35,6 @@ const hashStringToIndex = (str: string, max: number) => {
   }
   return Math.abs(hash) % max;
 };
-
-// Define an array of gradient pairs
-const gradientPairs = [
-  ["#d946ef", "#a855f7"], // Pink to Purple
-  ["#3b82f6", "#22d3ee"], // Blue to Cyan
-  ["#f97316", "#facc15"], // Orange to Yellow
-  ["#10b981", "#34d399"], // Green to Light Green
-  ["#ef4444", "#f87171"], // Red to Light Red
-];
 
 // Mapping for dynamic route titles
 const dynamicRouteTitles: { [key: string]: string } = {
@@ -59,7 +51,7 @@ export const AppHeader = () => {
   const params = useLocalSearchParams(); // Get dynamic route parameters
 
   // Check if the current route is under /(tabs)
-  const isTabsRoute = segments[0] === "(tabs)";
+  const isTabsRoute = segments[0] === "(tabs)" || segments[0] === "teacher";
 
   // Get the current route name (last segment)
   const currentRouteName = segments[segments.length - 1] || "Unknown";
@@ -116,12 +108,24 @@ export const AppHeader = () => {
               </VStack>
             </HStack>
             <HStack className="flex justify-end gap-3 items-center">
-              <View className="flex justify-center items-center border-border-300 p-3 rounded-full border bg-background-50">
-                <Bell color="#000" size={20} />
-              </View>
-              <View className="flex justify-center items-center border-border-300 p-3 rounded-full border bg-background-50">
-                <MessageSquareQuote color="#000" size={20} />
-              </View>
+              <Pressable
+                onPress={() => {
+                  router.push("/student/classes" as any);
+                }}
+              >
+                <View className="flex justify-center items-center border-border-300 p-3 rounded-full border bg-background-50">
+                  <Bell color="#000" size={20} />
+                </View>
+              </Pressable>
+              <Pressable
+                onPress={() => {
+                  router.push("/teacher/dashboard" as any);
+                }}
+              >
+                <View className="flex justify-center items-center border-border-300 p-3 rounded-full border bg-background-50">
+                  <MessageSquareQuote color="#000" size={20} />
+                </View>
+              </Pressable>
               <TouchableOpacity
                 onPress={() => {
                   router.push("/(tabs)/profile");

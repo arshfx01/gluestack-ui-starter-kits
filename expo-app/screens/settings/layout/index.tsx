@@ -5,13 +5,35 @@ import { ScrollView } from "@/components/ui/scroll-view";
 import { Image } from "@/components/ui/image";
 import { View } from "react-native";
 import BottomBtns from "@/components/BottomBtns";
+import { useEffect } from "react";
+import { router, useRouter } from "expo-router";
+import { useAuth } from "@/app/context/AuthContext";
+import NotLoggedIn from "@/components/NotLoggedIn";
 
 type SettingsLayoutProps = {
   children: React.ReactNode;
 };
 
 export const SettingsLayout = (props: SettingsLayoutProps) => {
-  return (
+  const router = useRouter();
+  const { user } = useAuth();
+  useEffect(() => {
+    if (!user) {
+      router.replace("/auth/splash-screen");
+      return;
+    }
+
+    const intervalId = setInterval(() => {
+      // Recheck the user status. If `user` becomes falsy, redirect.
+      if (!user) {
+        router.replace("/auth/splash-screen");
+        clearInterval(intervalId);
+      }
+    }, 10000); // Check every 10 seconds
+
+    return () => clearInterval(intervalId);
+  }, [user, router]);
+  return user ? (
     <SafeAreaView className="w-full h-full">
       <ScrollView
         className="w-full h-full"
@@ -24,5 +46,7 @@ export const SettingsLayout = (props: SettingsLayoutProps) => {
         </HStack>
       </ScrollView>
     </SafeAreaView>
+  ) : (
+    <NotLoggedIn />
   );
 };

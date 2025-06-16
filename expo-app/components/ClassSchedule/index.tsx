@@ -200,9 +200,12 @@ export const ClassSchedule = ({
           <VStack space="md">
             <HStack className="justify-between items-center">
               <HStack space="sm" className="items-center">
-                <Heading className="text-lg font-medium text-background-950">
+                <Text
+                  fontWeight="bold"
+                  className="text-lg font-medium text-background-950"
+                >
                   Current Ongoing Class
-                </Heading>
+                </Text>
               </HStack>
               <InfoIcon color="#cbcbcb" size={18} />
             </HStack>
@@ -215,9 +218,12 @@ export const ClassSchedule = ({
           <VStack space="md">
             <HStack className="justify-between items-center">
               <HStack space="sm" className="items-center">
-                <Heading className="text-lg font-medium text-background-950">
+                <Text
+                  fontWeight="bold"
+                  className="text-lg font-medium text-background-950"
+                >
                   Upcoming Classes
-                </Heading>
+                </Text>
               </HStack>
               <InfoIcon color="#cbcbcb" size={18} />
             </HStack>
@@ -232,9 +238,12 @@ export const ClassSchedule = ({
           <VStack space="md">
             <HStack className="justify-between items-center">
               <HStack space="sm" className="items-center">
-                <Heading className="text-lg font-medium text-background-950">
+                <Text
+                  fontWeight="bold"
+                  className="text-lg font-medium text-background-950"
+                >
                   Previous Classes
-                </Heading>
+                </Text>
               </HStack>
               <InfoIcon color="#cbcbcb" size={18} />
             </HStack>
@@ -266,9 +275,10 @@ export const ClassSchedule = ({
             onPress={() => setActiveTab(tab.id)}
           >
             <Text
+              fontWeight="bold"
               className={`text-center text-lg ${
                 activeTab === tab.id
-                  ? "text-background-950 font-bold"
+                  ? "text-background-950 "
                   : "text-secondary-300"
               }`}
             >

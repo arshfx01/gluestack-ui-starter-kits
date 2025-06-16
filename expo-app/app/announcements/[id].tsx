@@ -87,7 +87,7 @@ export default function AnnouncementDetail() {
 
         <VStack space="md" className="w-full">
           <Text
-            className="text-3xl text-typography-900"
+            className="text-4xl  text-typography-900"
             style={{ fontFamily: "BGSB" }}
           >
             {announcement.title}
@@ -113,10 +113,10 @@ export default function AnnouncementDetail() {
         </VStack>
 
         {/* Description Section */}
-        <View className="bg-background-50 p-4 rounded-xl">
+        <View className="py-4 rounded-xl">
           <Text
-            className="text-typography-900 whitespace-pre-line  text-lg"
-            style={{ lineHeight: 21, fontWeight: "500" }}
+            className="text-typography-700 whitespace-pre-line  text-lg"
+            style={{ lineHeight: 21, fontFamily: "InterSemiBold" }}
           >
             {announcement.fullDescription}
           </Text>

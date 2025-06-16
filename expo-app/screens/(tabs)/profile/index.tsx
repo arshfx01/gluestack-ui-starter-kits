@@ -36,6 +36,7 @@ import {
   ActionsheetBackdrop,
 } from "@/components/ui/actionsheet";
 import { LinearGradient } from "expo-linear-gradient";
+import { gradientPairs } from "@/constants/gradients";
 
 type Props = {};
 
@@ -48,15 +49,6 @@ const hashStringToIndex = (str: string, max: number) => {
   }
   return Math.abs(hash) % max;
 };
-
-// Define an array of gradient pairs
-const gradientPairs = [
-  ["#d946ef", "#a855f7"], // Pink to Purple
-  ["#3b82f6", "#22d3ee"], // Blue to Cyan
-  ["#f97316", "#facc15"], // Orange to Yellow
-  ["#10b981", "#34d399"], // Green to Light Green
-  ["#ef4444", "#f87171"], // Red to Light Red
-];
 
 const Profile = (props: Props) => {
   const { user, userProfile } = useAuth();

@@ -36,6 +36,9 @@ SplashScreen.preventAutoHideAsync();
 export default function RootLayout() {
   const [loaded, error] = useFonts({
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
+    InterMedium: require("../assets/fonts/InterTight-Medium.ttf"),
+    InterSemiBold: require("../assets/fonts/InterTight-SemiBold.ttf"),
+    InterBold: require("../assets/fonts/InterTight-Bold.ttf"),
     BGSB: require("../assets/fonts/BricolageGrotesqueSemiBold.ttf"),
     ...FontAwesome.font,
   });
@@ -78,7 +81,7 @@ function RootLayoutNav() {
       if (user) {
         router.replace("/(tabs)");
       } else {
-        router.replace("/auth/signin");
+        router.replace("/auth/splash-screen");
       }
     }
   }, [user, loading]);
