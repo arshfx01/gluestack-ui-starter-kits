@@ -373,15 +373,17 @@ const Homepage = () => {
                 className: "col-span-6 w-full",
               }}
             >
-              <View className="p-6 border-b w-full flex justify-start items-center border-border-300 rounded-xl">
-                <ActivityIcon color="black" />
-              </View>
-              <Text
-                fontWeight="bold"
-                className="p-2 text-center w-full flex justify-start items-center "
-              >
-                Analytics
-              </Text>
+              <Pressable onPress={() => router.push("/student/analytics")}>
+                <View className="p-6 border-b w-full flex justify-start items-center border-border-300 rounded-xl">
+                  <ActivityIcon color="black" />
+                </View>
+                <Text
+                  fontWeight="bold"
+                  className="p-2 text-center w-full flex justify-start items-center "
+                >
+                  Analytics
+                </Text>
+              </Pressable>
             </GridItem>
             <GridItem
               className="bg-background-50 rounded-xl w-full  hover:bg-background-200 text-center"
@@ -403,55 +405,7 @@ const Homepage = () => {
             </GridItem>
           </Grid>
           <Divider />
-          <ClassSchedule
-            currentClass={{
-              title: "Machine Learning",
-              time: "10:00 AM - 11:30 AM",
-              room: "Room 302",
-              instructor: "Dr. Samreen Imran",
-              type: "Online",
-              isLive: true,
-              attendance: {
-                percentage: 93,
-                attended: 43,
-                missed: 3,
-                total: 45,
-                streak: 10,
-              },
-            }}
-            upcomingClasses={[
-              {
-                title: "Physics Lab",
-                time: "1:00 PM - 3:00 PM",
-                room: "Lab 105",
-                instructor: "Prof. John Smith",
-                type: "Offline",
-                attendance: {
-                  percentage: 95,
-                  attended: 38,
-                  missed: 2,
-                  total: 40,
-                  streak: 15,
-                },
-              },
-            ]}
-            previousClasses={[
-              {
-                title: "Chemistry",
-                time: "9:00 AM - 10:30 AM",
-                room: "Room 201",
-                instructor: "Dr. Michael Lee",
-                type: "Online",
-                attendance: {
-                  percentage: 90,
-                  attended: 36,
-                  missed: 4,
-                  total: 40,
-                  streak: 8,
-                },
-              },
-            ]}
-          />
+          <ClassSchedule />
         </VStack>
         <AnnouncementWidget />
       </VStack>

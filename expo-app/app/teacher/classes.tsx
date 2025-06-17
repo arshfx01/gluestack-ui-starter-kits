@@ -163,8 +163,8 @@ export default function TeacherClasses() {
         {classes.length === 0 ? (
           <View className="bg-white rounded-2xl shadow-sm border border-border-200 p-8">
             <VStack className="items-center justify-center" space="md">
-              <View className="w-16 h-16 rounded-full bg-primary-50 items-center justify-center">
-                <Book size={32} color="#6366F1" />
+              <View className="w-16 h-16 rounded-full bg-backround-50 items-center justify-center">
+                <Book size={32} color="#9CA3AF" />
               </View>
               <Text className="text-xl font-semibold text-gray-900">
                 No Classes Yet
@@ -202,8 +202,8 @@ export default function TeacherClasses() {
 
                       {classItem.activeSession && classItem.sessionEndTime && (
                         <HStack className="items-center mt-2" space="sm">
-                          <View className="w-8 h-8 rounded-full bg-primary-50 items-center justify-center">
-                            <Clock size={16} color="#6366F1" />
+                          <View className="w-8 h-8 rounded-full bg-backround-50 items-center justify-center">
+                            <Clock size={16} color="#9CA3AF" />
                           </View>
                           <Text className="text-sm text-gray-600">
                             Session ends in:{" "}
@@ -221,12 +221,12 @@ export default function TeacherClasses() {
                         </HStack>
                       )}
                     </VStack>
-                    <ChevronRight size={24} color="#6366F1" />
+                    <ChevronRight size={24} color="#9CA3AF" />
                   </HStack>
                   <VStack space="sm">
                     <HStack className="items-center" space="sm">
-                      <View className="w-8 h-8 rounded-full bg-primary-50 items-center justify-center">
-                        <Users size={16} color="#6366F1" />
+                      <View className="w-8 h-8 rounded-full bg-backround-50 items-center justify-center">
+                        <Users size={16} color="#9CA3AF" />
                       </View>
                       <Text className="text-sm text-gray-600">
                         {classItem.students} Students
@@ -235,8 +235,8 @@ export default function TeacherClasses() {
 
                     {classItem.schedule?.day && classItem.schedule?.time && (
                       <HStack className="items-center" space="sm">
-                        <View className="w-8 h-8 rounded-full bg-primary-50 items-center justify-center">
-                          <Calendar size={16} color="#6366F1" />
+                        <View className="w-8 h-8 rounded-full bg-backround-50 items-center justify-center">
+                          <Calendar size={16} color="#9CA3AF" />
                         </View>
                         <Text className="text-sm text-gray-600">
                           {classItem.schedule.day} | {classItem.schedule.time}
