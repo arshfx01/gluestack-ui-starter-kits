@@ -1,15 +1,22 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, ScrollView, TouchableOpacity } from "react-native";
-
+import { View, ScrollView, TouchableOpacity } from "react-native";
 import { router } from "expo-router";
 import { doc, getDoc } from "firebase/firestore";
-
-import { Book, Users, Calendar, LogOut } from "lucide-react-native";
+import {
+  Book,
+  Users,
+  Calendar,
+  LogOut,
+  ChevronRight,
+} from "lucide-react-native";
 import { useToast } from "@/components/ui/toast";
 import { Button, ButtonText } from "@/components/ui/button";
 import { signOut } from "firebase/auth";
 import { auth, db } from "@/app/config/firebase";
 import { useAuth } from "@/app/context/AuthContext";
+import { VStack } from "@/components/ui/vstack";
+import { HStack } from "@/components/ui/hstack";
+import { Text } from "@/components/ui/text";
 
 interface TeacherProfile {
   name: string;
@@ -84,74 +91,123 @@ export default function TeacherDashboard() {
 
   if (loading) {
     return (
-      <View className="flex-1 justify-center items-center">
-        <Text>Loading...</Text>
+      <View className="flex-1 items-center justify-center bg-white">
+        <Text className="text-gray-600">Loading...</Text>
       </View>
     );
   }
 
   return (
     <ScrollView className="flex-1 bg-white">
-      <View className="p-6">
-        <View className="flex-row justify-between items-center mb-6">
-          <Text className="text-2xl font-bold">Teacher Dashboard</Text>
-          <TouchableOpacity onPress={handleSignOut}>
-            <LogOut size={24} color="#666" />
-          </TouchableOpacity>
-        </View>
+      {/* Header */}
 
-        <View className="bg-blue-50 p-4 rounded-lg mb-6">
-          <Text className="text-xl font-semibold mb-2">
-            {teacherProfile?.name}
-          </Text>
-          <Text className="text-gray-600">{teacherProfile?.subject}</Text>
-          <Text className="text-gray-600">{teacherProfile?.email}</Text>
-          <Text className="text-gray-600">{teacherProfile?.phone}</Text>
-        </View>
-
-        <View className="space-y-4">
-          <TouchableOpacity
-            className="bg-white p-4 rounded-lg shadow-sm border border-gray-200"
-            onPress={() => router.push("/teacher/classes" as any)}
-          >
-            <View className="flex-row items-center">
-              <Book size={24} color="#3b82f6" />
-              <View className="ml-4">
-                <Text className="text-lg font-semibold">My Classes</Text>
-                <Text className="text-gray-600">
-                  {teacherProfile?.classes.length || 0} classes
+      <VStack space="xl" className="p-6 pb-20">
+        {/* Profile Card */}
+        <View className="bg-white rounded-2xl shadow-sm border border-border-200">
+          <View className="flex-row items-center justify-between px-6 py-3 border-b border-border-200">
+            <Text className="text-xl font-semibold text-gray-900">Profile</Text>
+          </View>
+          <VStack space="md" className="p-6">
+            <HStack space="md" className="items-center">
+              <View className="w-12 h-12 rounded-full bg-background-50 items-center justify-center">
+                <Users size={24} color="#9CA3AF" />
+              </View>
+              <VStack>
+                <Text className="text-lg font-semibold text-gray-900">
+                  {teacherProfile?.name}
                 </Text>
-              </View>
-            </View>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            className="bg-white p-4 rounded-lg shadow-sm border border-gray-200"
-            onPress={() => router.push("/teacher/students" as any)}
-          >
-            <View className="flex-row items-center">
-              <Users size={24} color="#3b82f6" />
-              <View className="ml-4">
-                <Text className="text-lg font-semibold">Students</Text>
-                <Text className="text-gray-600">View all students</Text>
-              </View>
-            </View>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            className="bg-white p-4 rounded-lg shadow-sm border border-gray-200"
-            onPress={() => router.push("/teacher/schedule" as any)}
-          >
-            <View className="flex-row items-center">
-              <Calendar size={24} color="#3b82f6" />
-              <View className="ml-4">
-                <Text className="text-lg font-semibold">Schedule</Text>
-                <Text className="text-gray-600">View class schedule</Text>
-              </View>
-            </View>
-          </TouchableOpacity>
+                <Text className="text-base text-gray-600">
+                  {teacherProfile?.subject}
+                </Text>
+              </VStack>
+            </HStack>
+            <VStack space="sm">
+              <HStack space="sm" className="items-center">
+                <Text className="text-sm text-gray-500">Email:</Text>
+                <Text className="text-sm text-gray-900">
+                  {teacherProfile?.email}
+                </Text>
+              </HStack>
+              <HStack space="sm" className="items-center">
+                <Text className="text-sm text-gray-500">Phone:</Text>
+                <Text className="text-sm text-gray-900">
+                  {teacherProfile?.phone}
+                </Text>
+              </HStack>
+            </VStack>
+          </VStack>
         </View>
-      </View>
+
+        {/* Quick Actions */}
+        <View className="bg-white rounded-2xl shadow-sm border border-border-200">
+          <View className="flex-row items-center justify-between px-6 py-3 border-b border-border-200">
+            <Text className="text-xl font-semibold text-gray-900">
+              Quick Actions
+            </Text>
+          </View>
+          <VStack space="md" className="p-6">
+            <TouchableOpacity
+              className="bg-gray-50 p-4 rounded-xl"
+              onPress={() => router.push("/teacher/classes" as any)}
+            >
+              <HStack space="md" className="items-center">
+                <View className="w-10 h-10 rounded-full bg-background-50 items-center justify-center">
+                  <Book size={20} color="#9CA3AF" />
+                </View>
+                <VStack className="flex-1">
+                  <Text className="text-base font-semibold text-gray-900">
+                    My Classes
+                  </Text>
+                  <Text className="text-sm text-gray-500">
+                    {teacherProfile?.classes.length || 0} classes
+                  </Text>
+                </VStack>
+                <ChevronRight size={20} color="#9CA3AF" />
+              </HStack>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              className="bg-gray-50 p-4 rounded-xl"
+              onPress={() => router.push("/teacher/students" as any)}
+            >
+              <HStack space="md" className="items-center">
+                <View className="w-10 h-10 rounded-full bg-background-50 items-center justify-center">
+                  <Users size={20} color="#9CA3AF" />
+                </View>
+                <VStack className="flex-1">
+                  <Text className="text-base font-semibold text-gray-900">
+                    Students
+                  </Text>
+                  <Text className="text-sm text-gray-500">
+                    View all students
+                  </Text>
+                </VStack>
+                <ChevronRight size={20} color="#9CA3AF" />
+              </HStack>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              className="bg-gray-50 p-4 rounded-xl"
+              onPress={() => router.push("/teacher/schedule" as any)}
+            >
+              <HStack space="md" className="items-center">
+                <View className="w-10 h-10 rounded-full bg-background-50 items-center justify-center">
+                  <Calendar size={20} color="#9CA3AF" />
+                </View>
+                <VStack className="flex-1">
+                  <Text className="text-base font-semibold text-gray-900">
+                    Schedule
+                  </Text>
+                  <Text className="text-sm text-gray-500">
+                    View class schedule
+                  </Text>
+                </VStack>
+                <ChevronRight size={20} color="#9CA3AF" />
+              </HStack>
+            </TouchableOpacity>
+          </VStack>
+        </View>
+      </VStack>
     </ScrollView>
   );
 }

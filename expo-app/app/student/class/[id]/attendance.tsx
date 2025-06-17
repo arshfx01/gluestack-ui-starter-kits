@@ -246,7 +246,7 @@ export default function MarkAttendance() {
                   <Text className="text-base text-success-600 font-medium">
                     Attendance Marked
                   </Text>
-                  <Text className="text-sm text-gray-500">
+                  <Text className="text-sm text-gray-500 max-w-[98%]">
                     Your attendance has been recorded for today's class
                   </Text>
                 </View>
@@ -260,7 +260,7 @@ export default function MarkAttendance() {
                   <Text className="text-base text-gray-600">
                     No Active Session
                   </Text>
-                  <Text className="text-sm text-gray-500">
+                  <Text className="text-sm text-gray-500 max-w-[98%]">
                     There is no active attendance session at the moment
                   </Text>
                 </View>

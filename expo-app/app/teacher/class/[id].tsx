@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, ScrollView, TouchableOpacity } from "react-native";
+import { View, ScrollView, TouchableOpacity } from "react-native";
 import { useAuth } from "@/app/context/AuthContext";
 import { router, useLocalSearchParams } from "expo-router";
 import {
@@ -22,6 +22,7 @@ import { useToast } from "@/components/ui/toast";
 import { VStack } from "@/components/ui/vstack";
 import { HStack } from "@/components/ui/hstack";
 import { Button, ButtonText } from "@/components/ui/button";
+import { Text } from "@/components/ui/text";
 
 interface ClassDetails {
   id: string;
@@ -132,100 +133,159 @@ export default function ClassDetails() {
     totalStudents > 0 ? Math.round((presentCount / totalStudents) * 100) : 0;
 
   return (
-    <View className="flex-1 bg-white">
+    <ScrollView className="flex-1 bg-white w-full">
       {/* Header */}
-      <View className="p-6 border-b border-gray-200">
-        <TouchableOpacity className="mb-4" onPress={() => router.back()}>
-          <HStack space="sm" className="items-center">
-            <ChevronLeft size={24} color="#666" />
-            <Text className="text-gray-600">Back to Classes</Text>
-          </HStack>
-        </TouchableOpacity>
-
-        <Text className="text-2xl font-bold">{classDetails.name}</Text>
-        <Text className="text-gray-600 mt-1">{classDetails.subject}</Text>
+      <View className="p-6 bg-white border-b border-border-200">
+        <Text fontWeight="bold" className="text-3xl text-gray-900 mb-1">
+          {classDetails.subject}
+        </Text>
+        <Text className="text-lg text-gray-600">{classDetails.name}</Text>
       </View>
 
-      {/* Class Info */}
-      <ScrollView className="flex-1">
-        <VStack space="lg" className="p-6">
-          {/* Schedule Card */}
-          <View className="bg-gray-50 p-4 rounded-lg">
-            <HStack space="sm" className="items-center mb-2">
-              <Calendar size={20} color="#666" />
-              <Text className="text-gray-600">{classDetails.schedule.day}</Text>
-            </HStack>
-            <HStack space="sm" className="items-center mb-2">
-              <Clock size={20} color="#666" />
-              <Text className="text-gray-600">
-                {classDetails.schedule.time}
-              </Text>
-            </HStack>
-            <HStack space="sm" className="items-center">
-              <MapPin size={20} color="#666" />
-              <Text className="text-gray-600">
-                Room {classDetails.schedule.room}
-              </Text>
-            </HStack>
+      {/* Content */}
+      <VStack space="xl" className="p-6 pb-20 w-full">
+        {/* Class Details Badges */}
+        <View className="bg-white w-full rounded-2xl shadow-sm border border-border-200">
+          <View className="flex-row items-center justify-between px-6 py-3 border-b border-border-200">
+            <Text className="text-xl font-semibold text-gray-900">
+              Class Details
+            </Text>
           </View>
+          <VStack space="md" className="p-6">
+            <HStack space="md" className="flex-wrap">
+              <View className="bg-blue-50 px-4 py-2 rounded-lg">
+                <Text className="text-sm text-blue-700 font-medium">
+                  Department
+                </Text>
+                <Text className="text-base text-blue-900">
+                  {classDetails.department}
+                </Text>
+              </View>
 
-          {/* Class Details Card */}
-          <View className="bg-gray-50 p-4 rounded-lg">
-            <Text className="text-lg font-semibold mb-4">Class Details</Text>
-            <VStack space="sm">
-              <Text className="text-gray-600">
-                Department: {classDetails.department}
-              </Text>
-              <Text className="text-gray-600">Year: {classDetails.year}</Text>
-              <Text className="text-gray-600">
-                Semester: {classDetails.semester}
-              </Text>
-              <Text className="text-gray-600">
-                Section: {classDetails.section}
-              </Text>
-              <Text className="text-gray-600">
-                Total Students: {classDetails.students.length}
-              </Text>
-            </VStack>
+              <View className="bg-green-50 px-4 py-2 rounded-lg">
+                <Text className="text-sm text-green-700 font-medium">Year</Text>
+                <Text className="text-base text-green-900">
+                  {classDetails.year}
+                </Text>
+              </View>
+
+              <View className="bg-orange-50 px-4 py-2 rounded-lg">
+                <Text className="text-sm text-orange-700 font-medium">
+                  Semester
+                </Text>
+                <Text className="text-base text-orange-900">
+                  {classDetails.semester}
+                </Text>
+              </View>
+
+              <View className="bg-purple-50 px-4 py-2 rounded-lg">
+                <Text className="text-sm text-purple-700 font-medium">
+                  Section
+                </Text>
+                <Text className="text-base text-purple-900">
+                  {classDetails.section}
+                </Text>
+              </View>
+            </HStack>
+          </VStack>
+        </View>
+
+        {/* Schedule Card */}
+        <View className="bg-white rounded-2xl shadow-sm border border-border-200">
+          <View className="flex-row items-center justify-between px-6 py-3 border-b border-border-200">
+            <Text className="text-xl font-semibold text-gray-900">
+              Schedule
+            </Text>
           </View>
+          <VStack space="md" className="p-6">
+            <HStack space="md" className="items-center">
+              <View className="w-10 h-10 rounded-full bg-blue-50 items-center justify-center">
+                <Calendar size={20} color="#6366F1" />
+              </View>
+              <View>
+                <Text className="text-sm text-gray-500">Day</Text>
+                <Text className="text-base text-gray-900">
+                  {classDetails.schedule.day}
+                </Text>
+              </View>
+            </HStack>
+            <HStack space="md" className="items-center">
+              <View className="w-10 h-10 rounded-full bg-blue-50 items-center justify-center">
+                <Clock size={20} color="#6366F1" />
+              </View>
+              <View>
+                <Text className="text-sm text-gray-500">Time</Text>
+                <Text className="text-base text-gray-900">
+                  {classDetails.schedule.time}
+                </Text>
+              </View>
+            </HStack>
+            <HStack space="md" className="items-center">
+              <View className="w-10 h-10 rounded-full bg-blue-50 items-center justify-center">
+                <MapPin size={20} color="#6366F1" />
+              </View>
+              <View>
+                <Text className="text-sm text-gray-500">Room</Text>
+                <Text className="text-base text-gray-900">
+                  Room {classDetails.schedule.room}
+                </Text>
+              </View>
+            </HStack>
+          </VStack>
+        </View>
 
-          {/* Today's Attendance Card */}
-          <View className="bg-gray-50 p-4 rounded-lg">
-            <Text className="text-lg font-semibold mb-2">
+        {/* Today's Attendance Card */}
+        <View className="bg-white rounded-2xl shadow-sm border border-border-200">
+          <View className="flex-row items-center justify-between px-6 py-3 border-b border-border-200">
+            <Text className="text-xl font-semibold text-gray-900">
               Today's Attendance
             </Text>
-            <HStack space="sm" className="items-center mb-2">
-              <Users size={20} color="#666" />
-              <Text className="text-gray-600">
-                {presentCount} of {totalStudents} students present
-              </Text>
-            </HStack>
-            <Text className="text-gray-600">
-              Attendance Rate: {attendancePercentage}%
-            </Text>
           </View>
-        </VStack>
-      </ScrollView>
+          <VStack space="md" className="p-6">
+            <HStack space="md" className="items-center">
+              <View className="w-10 h-10 rounded-full bg-blue-50 items-center justify-center">
+                <Users size={20} color="#6366F1" />
+              </View>
+              <View>
+                <Text className="text-sm text-gray-500">Present Students</Text>
+                <Text className="text-base text-gray-900">
+                  {presentCount} of {totalStudents} students
+                </Text>
+              </View>
+            </HStack>
+            <View className="bg-gray-50 p-4 rounded-lg">
+              <Text className="text-sm text-gray-500">Attendance Rate</Text>
+              <Text className="text-2xl font-semibold text-gray-900">
+                {attendancePercentage}%
+              </Text>
+            </View>
+          </VStack>
+        </View>
 
-      {/* Action Buttons */}
-      <View className="p-4 border-t border-gray-200">
-        <VStack space="sm">
+        {/* Action Buttons */}
+        <VStack space="md" className="">
           <Button
-            className="w-full bg-blue-500"
+            action="primary"
             onPress={() =>
               router.push(`/teacher/class/${id}/attendance` as any)
             }
+            className="w-full h-14 rounded-2xl shadow-md bg-primary-600"
           >
-            <ButtonText>Manage Attendance</ButtonText>
+            <ButtonText className="text-white font-semibold">
+              Manage Attendance
+            </ButtonText>
           </Button>
           <Button
-            className="w-full bg-gray-500"
+            action="secondary"
             onPress={() => router.push(`/teacher/class/${id}/students` as any)}
+            className="w-full h-14 rounded-2xl shadow-md bg-gray-100"
           >
-            <ButtonText>View Students</ButtonText>
+            <ButtonText className="text-gray-900 font-semibold">
+              View Students
+            </ButtonText>
           </Button>
         </VStack>
-      </View>
-    </View>
+      </VStack>
+    </ScrollView>
   );
 }

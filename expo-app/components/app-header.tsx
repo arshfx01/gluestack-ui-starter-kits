@@ -8,6 +8,7 @@ import {
   ArrowRight,
   Bell,
   Filter,
+  LogOut,
   Megaphone,
   MessageSquareQuote,
   QrCodeIcon,
@@ -25,6 +26,8 @@ import { Badge, BadgeText } from "./ui/badge";
 import { useAuth } from "@/app/context/AuthContext";
 import { LinearGradient } from "expo-linear-gradient";
 import { gradientPairs } from "@/constants/gradients";
+import { signOut } from "firebase/auth";
+import { auth } from "@/app/config/firebase";
 
 // Function to hash a string and map it to an index
 const hashStringToIndex = (str: string, max: number) => {
@@ -47,29 +50,35 @@ const dynamicRouteTitles: { [key: string]: string } = {
 export const AppHeader = () => {
   const { userProfile } = useAuth();
   const userFullName = userProfile?.fullName || "Guest User";
-  const segments = useSegments(); // Get the route segments
-  const params = useLocalSearchParams(); // Get dynamic route parameters
+  const segments = useSegments();
+  const params = useLocalSearchParams();
 
-  // Check if the current route is under /(tabs)
   const isTabsRoute = segments[0] === "(tabs)" || segments[0] === "teacher";
-
-  // Get the current route name (last segment)
+  const isTeacherRoute = segments[0] === "teacher";
   const currentRouteName = segments[segments.length - 1] || "Unknown";
 
-  // Determine the display title
+  // Determine user role based on route and auth
+  const userRole = isTeacherRoute ? "teacher" : userProfile?.role || "student";
+
   let displayTitle = currentRouteName;
   if (currentRouteName === "[id]") {
-    // For dynamic routes, use the parent route to determine the title
     const parentRoute = segments[segments.length - 2] || "";
     displayTitle = dynamicRouteTitles[parentRoute] || "Details";
   } else {
-    // Capitalize non-dynamic route names
     displayTitle = currentRouteName;
   }
 
-  // Select gradient based on the user's name
   const gradientIndex = hashStringToIndex(userFullName, gradientPairs.length);
   const selectedGradient = gradientPairs[gradientIndex];
+
+  const handleSignOut = async () => {
+    try {
+      await signOut(auth);
+      router.replace("/auth/teacher-auth" as any);
+    } catch (error) {
+      console.error("Error signing out:", error);
+    }
+  };
 
   return (
     <VStack>
@@ -98,60 +107,87 @@ export const AppHeader = () => {
                 <Badge
                   className="rounded-md px-2 py-[1px]"
                   variant="outline"
-                  action="muted"
+                  action={isTeacherRoute ? "info" : "muted"}
                   size="sm"
                 >
-                  <BadgeText className="text-xs font-bold">
-                    {userProfile?.role || "student"}
+                  <BadgeText
+                    className={`text-xs font-bold ${
+                      isTeacherRoute ? "text-primary-600" : ""
+                    }`}
+                  >
+                    {userRole}
                   </BadgeText>
                 </Badge>
               </VStack>
             </HStack>
             <HStack className="flex justify-end gap-3 items-center">
-              <Pressable
-                onPress={() => {
-                  router.push("/student/classes" as any);
-                }}
-              >
-                <View className="flex justify-center items-center border-border-300 p-3 rounded-full border bg-background-50">
-                  <Bell color="#000" size={20} />
-                </View>
-              </Pressable>
-              <Pressable
-                onPress={() => {
-                  router.push("/teacher/dashboard" as any);
-                }}
-              >
-                <View className="flex justify-center items-center border-border-300 p-3 rounded-full border bg-background-50">
-                  <MessageSquareQuote color="#000" size={20} />
-                </View>
-              </Pressable>
-              <TouchableOpacity
-                onPress={() => {
-                  router.push("/(tabs)/profile");
-                }}
-              >
-                <Avatar
-                  size="md"
-                  className="border border-border-200 bg-transparent"
-                >
-                  <LinearGradient
-                    colors={selectedGradient}
-                    start={{ x: 0, y: 0 }}
-                    end={{ x: 1, y: 1 }}
-                    style={{
-                      position: "absolute",
-                      width: "100%",
-                      height: "100%",
-                      borderRadius: 9999,
+              {isTeacherRoute ? (
+                // Teacher header actions
+                <>
+                  <Pressable
+                    onPress={() => {
+                      router.push("/teacher/classes" as any);
                     }}
-                  />
-                  <AvatarFallbackText className="text-white text-xl">
-                    {userFullName.charAt(0)}
-                  </AvatarFallbackText>
-                  <AvatarBadge />
-                </Avatar>
-              </TouchableOpacity>
+                  >
+                    <View className="flex justify-center items-center border-border-300 p-3 rounded-full border bg-background-50">
+                      <Bell color="#000" size={20} />
+                    </View>
+                  </Pressable>
+                  <TouchableOpacity onPress={handleSignOut}>
+                    <View className="flex justify-center items-center border-border-300 p-3 rounded-full border bg-background-50">
+                      <LogOut color="#000" size={20} />
+                    </View>
+                  </TouchableOpacity>
+                </>
+              ) : (
+                // Student header actions
+                <>
+                  <Pressable
+                    onPress={() => {
+                      router.push("/student/classes" as any);
+                    }}
+                  >
+                    <View className="flex justify-center items-center border-border-300 p-3 rounded-full border bg-background-50">
+                      <Bell color="#000" size={20} />
+                    </View>
+                  </Pressable>
+                  <Pressable
+                    onPress={() => {
+                      router.push("/teacher/dashboard" as any);
+                    }}
+                  >
+                    <View className="flex justify-center items-center border-border-300 p-3 rounded-full border bg-background-50">
+                      <MessageSquareQuote color="#000" size={20} />
+                    </View>
+                  </Pressable>
+                  <TouchableOpacity
+                    onPress={() => {
+                      router.push("/(tabs)/profile");
+                    }}
+                  >
+                    <Avatar
+                      size="md"
+                      className="border border-border-200 bg-transparent"
+                    >
+                      <LinearGradient
+                        colors={selectedGradient}
+                        start={{ x: 0, y: 0 }}
+                        end={{ x: 1, y: 1 }}
+                        style={{
+                          position: "absolute",
+                          width: "100%",
+                          height: "100%",
+                          borderRadius: 9999,
+                        }}
+                      />
+                      <AvatarFallbackText className="text-white text-xl">
+                        {userFullName.charAt(0)}
+                      </AvatarFallbackText>
+                      <AvatarBadge />
+                    </Avatar>
+                  </TouchableOpacity>
+                </>
+              )}
             </HStack>
           </>
         ) : (

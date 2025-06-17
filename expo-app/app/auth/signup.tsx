@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, TouchableOpacity, ScrollView, TextInput } from "react-native";
 import {
   createUserWithEmailAndPassword,
   PhoneAuthProvider,
@@ -34,8 +34,8 @@ import { FirebaseRecaptchaVerifierModal } from "expo-firebase-recaptcha";
 import type { FirebaseRecaptchaVerifierModal as RecaptchaVerifierModalType } from "expo-firebase-recaptcha";
 import { useAuth } from "../context/AuthContext";
 import { useToast } from "@/components/ui/toast";
-
-import { TextInput } from "react-native";
+import { Button, ButtonText } from "@/components/ui/button";
+import { Text } from "@/components/ui/text";
 
 export default function SignUp() {
   const router = useRouter();
@@ -297,7 +297,258 @@ export default function SignUp() {
   };
 
   return (
-    <View className="flex-1 justify-center px-6 bg-white">
+    <View className="flex-1 bg-white">
+      {/* Header */}
+
+      <ScrollView className="flex-1">
+        <View className="flex-1 justify-center px-6 py-8">
+          <View className="items-center mb-8">
+            <View className="bg-black border-2 border-border-300 w-20 h-20 rounded-2xl items-center justify-center mb-4 overflow-hidden">
+              <Image
+                source={{
+                  uri: "https://img.freepik.com/free-photo/abstract-luxury-gradient-blue-background-smooth-dark-blue-with-black-vignette-studio-banner_1258-100541.jpg?semt=ais_hybrid&w=740",
+                }}
+                alt="logo"
+                className="w-16 h-16 rounded-full"
+              />
+            </View>
+            <Text
+              fontWeight="bold"
+              className="text-3xl text-gray-900 mb-2"
+              style={{ fontFamily: "BGSB" }}
+            >
+              Create Account
+            </Text>
+            <Text className="text-base text-gray-500 text-center">
+              Sign up to get started
+            </Text>
+          </View>
+
+          <VStack space="lg">
+            <View className="bg-gray-50 p-2 border border-border-200 rounded-2xl">
+              <HStack space="md" className="items-center">
+                <View className="w-10 h-10 rounded-full bg-background-50 items-center justify-center">
+                  <User size={20} color="#9CA3AF" />
+                </View>
+                <TextInput
+                  placeholder="Full Name"
+                  value={fullName}
+                  onChangeText={setFullName}
+                  autoCapitalize="words"
+                  className="flex-1 text-base text-gray-900"
+                  placeholderTextColor="#9CA3AF"
+                />
+              </HStack>
+            </View>
+
+            <View className="bg-gray-50 p-2 border border-border-200 rounded-2xl">
+              <HStack space="md" className="items-center">
+                <View className="w-10 h-10 rounded-full bg-background-50 items-center justify-center">
+                  <Hash size={20} color="#9CA3AF" />
+                </View>
+                <TextInput
+                  placeholder="Roll No."
+                  value={rollNo}
+                  onChangeText={setRollNo}
+                  keyboardType="default"
+                  className="flex-1 text-base text-gray-900"
+                  placeholderTextColor="#9CA3AF"
+                />
+              </HStack>
+            </View>
+
+            <View className="flex-row items-center justify-center my-4">
+              <TouchableOpacity
+                onPress={() => setSignUpMethod("email")}
+                className={`flex-1 p-3 rounded-2xl mr-2 ${
+                  signUpMethod === "email" ? "bg-primary-600" : "bg-gray-100"
+                }`}
+              >
+                <Text
+                  className={`text-center font-semibold ${
+                    signUpMethod === "email" ? "text-white" : "text-gray-600"
+                  }`}
+                >
+                  Email
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => setSignUpMethod("phone")}
+                className={`flex-1 p-3 rounded-2xl ml-2 ${
+                  signUpMethod === "phone" ? "bg-primary-600" : "bg-gray-100"
+                }`}
+              >
+                <Text
+                  className={`text-center font-semibold ${
+                    signUpMethod === "phone" ? "text-white" : "text-gray-600"
+                  }`}
+                >
+                  Phone
+                </Text>
+              </TouchableOpacity>
+            </View>
+
+            {signUpMethod === "email" ? (
+              <>
+                <View className="bg-gray-50 p-2 border border-border-200 rounded-2xl">
+                  <HStack space="md" className="items-center">
+                    <View className="w-10 h-10 rounded-full bg-background-50 items-center justify-center">
+                      <Mail size={20} color="#9CA3AF" />
+                    </View>
+                    <TextInput
+                      placeholder="Email"
+                      value={email}
+                      onChangeText={setEmail}
+                      keyboardType="email-address"
+                      autoCapitalize="none"
+                      className="flex-1 text-base text-gray-900"
+                      placeholderTextColor="#9CA3AF"
+                    />
+                  </HStack>
+                </View>
+
+                <View className="bg-gray-50 p-2 border border-border-200 rounded-2xl">
+                  <HStack space="md" className="items-center">
+                    <View className="w-10 h-10 rounded-full bg-background-50 items-center justify-center">
+                      <Lock size={20} color="#9CA3AF" />
+                    </View>
+                    <TextInput
+                      placeholder="Password"
+                      value={password}
+                      onChangeText={setPassword}
+                      secureTextEntry
+                      className="flex-1 text-base text-gray-900"
+                      placeholderTextColor="#9CA3AF"
+                    />
+                  </HStack>
+                </View>
+
+                <View className="bg-gray-50 p-2 border border-border-200 rounded-2xl">
+                  <HStack space="md" className="items-center">
+                    <View className="w-10 h-10 rounded-full bg-background-50 items-center justify-center">
+                      <Lock size={20} color="#9CA3AF" />
+                    </View>
+                    <TextInput
+                      placeholder="Confirm Password"
+                      value={confirmPassword}
+                      onChangeText={setConfirmPassword}
+                      secureTextEntry
+                      className="flex-1 text-base text-gray-900"
+                      placeholderTextColor="#9CA3AF"
+                    />
+                  </HStack>
+                </View>
+
+                <Button
+                  action="primary"
+                  onPress={handleEmailSignUp}
+                  disabled={loading}
+                  className="w-full h-14 rounded-2xl shadow-md bg-primary-600 mt-4"
+                >
+                  <HStack space="sm" className="items-center">
+                    <ButtonText className="text-white font-semibold">
+                      {loading ? "Creating Account..." : "Sign Up with Email"}
+                    </ButtonText>
+                    <ArrowRight size={20} color="white" />
+                  </HStack>
+                </Button>
+              </>
+            ) : !showVerificationInput ? (
+              <>
+                <View className="bg-gray-50 p-2 border border-border-200 rounded-2xl">
+                  <HStack space="md" className="items-center">
+                    <View className="w-10 h-10 rounded-full bg-background-50 items-center justify-center">
+                      <Phone size={20} color="#9CA3AF" />
+                    </View>
+                    <HStack space="sm" className="items-center flex-1">
+                      <Text className="text-gray-600 font-medium">+91</Text>
+                      <View className="h-6 w-[1px] bg-gray-300" />
+                      <TextInput
+                        placeholder="Phone Number"
+                        value={phoneNumber}
+                        onChangeText={(text) =>
+                          setPhoneNumber(text.replace(/[^0-9]/g, ""))
+                        }
+                        keyboardType="phone-pad"
+                        maxLength={10}
+                        className="flex-1 text-base text-gray-900"
+                        placeholderTextColor="#9CA3AF"
+                      />
+                    </HStack>
+                  </HStack>
+                </View>
+
+                <Button
+                  action="primary"
+                  onPress={handlePhoneSignUp}
+                  disabled={loading}
+                  className="w-full h-14 rounded-2xl shadow-md bg-primary-600 mt-4"
+                >
+                  <HStack space="sm" className="items-center">
+                    <ButtonText className="text-white font-semibold">
+                      {loading ? "Sending Code..." : "Sign Up with Phone"}
+                    </ButtonText>
+                    <Phone size={20} color="white" />
+                  </HStack>
+                </Button>
+              </>
+            ) : (
+              <>
+                <View className="bg-gray-50 p-2 border border-border-200 rounded-2xl">
+                  <HStack space="md" className="items-center">
+                    <View className="w-10 h-10 rounded-full bg-background-50 items-center justify-center">
+                      <KeyRound size={20} color="#9CA3AF" />
+                    </View>
+                    <TextInput
+                      placeholder="Enter verification code"
+                      value={verificationCode}
+                      onChangeText={setVerificationCode}
+                      keyboardType="number-pad"
+                      className="flex-1 text-base text-gray-900"
+                      placeholderTextColor="#9CA3AF"
+                    />
+                  </HStack>
+                </View>
+
+                <Button
+                  action="primary"
+                  onPress={verifyCode}
+                  disabled={loading}
+                  className="w-full h-14 rounded-2xl shadow-md bg-primary-600 mt-4"
+                >
+                  <HStack space="sm" className="items-center">
+                    <ButtonText className="text-white font-semibold">
+                      {loading ? "Verifying..." : "Verify Code"}
+                    </ButtonText>
+                    <ArrowRight size={20} color="white" />
+                  </HStack>
+                </Button>
+
+                <TouchableOpacity
+                  onPress={() => setShowVerificationInput(false)}
+                  className="flex-row items-center justify-center mt-4"
+                >
+                  <ArrowLeft size={16} color="#9CA3AF" />
+                  <Text className="text-primary-600 ml-1">
+                    Change Phone Number
+                  </Text>
+                </TouchableOpacity>
+              </>
+            )}
+
+            <TouchableOpacity
+              onPress={() => router.push("/auth/signin")}
+              className="flex-row items-center justify-center mt-4"
+            >
+              <LogIn size={16} color="#9CA3AF" />
+              <Text className="text-primary-600 ml-1">
+                Already have an account? Sign In
+              </Text>
+            </TouchableOpacity>
+          </VStack>
+        </View>
+      </ScrollView>
+
       <FirebaseRecaptchaVerifierModal
         ref={recaptchaVerifier}
         firebaseConfig={auth.app.options}
@@ -305,202 +556,6 @@ export default function SignUp() {
         title="Verify your phone number"
         cancelLabel="Cancel"
       />
-
-      <View className="items-center mb-8">
-        <Image
-          source={{
-            uri: "https://img.freepik.com/free-photo/abstract-luxury-gradient-blue-background-smooth-dark-blue-with-black-vignette-studio-banner_1258-100541.jpg?semt=ais_hybrid&w=740",
-          }}
-          alt="logo"
-          className="w-20 h-20 rounded-full mb-4"
-        />
-        <Text className="text-3xl text-center" style={{ fontFamily: "BGSB" }}>
-          Create Account
-        </Text>
-        <Text
-          className="text-gray-500 mt-2 text-center"
-          style={{ fontFamily: "BGSB" }}
-        >
-          Sign up to get started
-        </Text>
-      </View>
-
-      <VStack space="md">
-        <View className="flex-row items-center border border-gray-300 rounded-lg px-4">
-          <User size={20} color="#666" />
-          <TextInput
-            className="flex-1 p-4"
-            placeholder="Full Name"
-            value={fullName}
-            onChangeText={setFullName}
-            autoCapitalize="words"
-          />
-        </View>
-
-        <View className="flex-row items-center border border-gray-300 rounded-lg px-4">
-          <Hash size={20} color="#666" />
-          <TextInput
-            className="flex-1 p-4"
-            placeholder="Roll No."
-            value={rollNo}
-            onChangeText={setRollNo}
-            keyboardType="default"
-          />
-        </View>
-
-        <View className="flex-row items-center justify-center my-4">
-          <TouchableOpacity
-            onPress={() => setSignUpMethod("email")}
-            className={`flex-1 p-3 rounded-lg mr-2 ${
-              signUpMethod === "email" ? "bg-blue-500" : "bg-gray-200"
-            }`}
-          >
-            <Text
-              className={`text-center font-semibold ${
-                signUpMethod === "email" ? "text-white" : "text-gray-600"
-              }`}
-            >
-              Email
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => setSignUpMethod("phone")}
-            className={`flex-1 p-3 rounded-lg ml-2 ${
-              signUpMethod === "phone" ? "bg-blue-500" : "bg-gray-200"
-            }`}
-          >
-            <Text
-              className={`text-center font-semibold ${
-                signUpMethod === "phone" ? "text-white" : "text-gray-600"
-              }`}
-            >
-              Phone
-            </Text>
-          </TouchableOpacity>
-        </View>
-
-        {signUpMethod === "email" ? (
-          <>
-            <View className="flex-row items-center border border-gray-300 rounded-lg px-4">
-              <Mail size={20} color="#666" />
-              <TextInput
-                className="flex-1 p-4"
-                placeholder="Email"
-                value={email}
-                onChangeText={setEmail}
-                keyboardType="email-address"
-                autoCapitalize="none"
-              />
-            </View>
-
-            <View className="flex-row items-center border border-gray-300 rounded-lg px-4">
-              <Lock size={20} color="#666" />
-              <TextInput
-                className="flex-1 p-4"
-                placeholder="Password"
-                value={password}
-                onChangeText={setPassword}
-                secureTextEntry
-              />
-            </View>
-
-            <View className="flex-row items-center border border-gray-300 rounded-lg px-4">
-              <Lock size={20} color="#666" />
-              <TextInput
-                className="flex-1 p-4"
-                placeholder="Confirm Password"
-                value={confirmPassword}
-                onChangeText={setConfirmPassword}
-                secureTextEntry
-              />
-            </View>
-
-            <TouchableOpacity
-              className="w-full bg-blue-500 p-4 rounded-lg flex-row items-center justify-center space-x-2"
-              onPress={handleEmailSignUp}
-              disabled={loading}
-            >
-              <Text className="text-white px-2 font-semibold">
-                {loading ? "Creating Account..." : "Sign Up with Email"}
-              </Text>
-              <ArrowRight size={20} color="white" />
-            </TouchableOpacity>
-          </>
-        ) : !showVerificationInput ? (
-          <>
-            <View className="flex-row items-center border border-gray-300 rounded-lg px-4">
-              <Phone size={20} color="#666" />
-              <View className="flex-row items-center">
-                <Text className="text-gray-600 font-medium px-2">+91</Text>
-                <View className="h-6 w-[1px] bg-gray-300 mx-2" />
-                <TextInput
-                  className="flex-1 p-4"
-                  placeholder="Phone Number"
-                  value={phoneNumber}
-                  onChangeText={(text) =>
-                    setPhoneNumber(text.replace(/[^0-9]/g, ""))
-                  }
-                  keyboardType="phone-pad"
-                  maxLength={10}
-                />
-              </View>
-            </View>
-
-            <TouchableOpacity
-              className="w-full bg-green-500 p-4 rounded-lg flex-row items-center justify-center space-x-2"
-              onPress={handlePhoneSignUp}
-              disabled={loading}
-            >
-              <Text className="text-white px-2 font-semibold">
-                {loading ? "Sending Code..." : "Sign Up with Phone"}
-              </Text>
-              <Phone size={20} color="white" />
-            </TouchableOpacity>
-          </>
-        ) : (
-          <>
-            <View className="flex-row items-center border border-gray-300 rounded-lg px-4">
-              <KeyRound size={20} color="#666" />
-              <TextInput
-                className="flex-1 p-4"
-                placeholder="Enter verification code"
-                value={verificationCode}
-                onChangeText={setVerificationCode}
-                keyboardType="number-pad"
-              />
-            </View>
-
-            <TouchableOpacity
-              className="w-full bg-green-500 p-4 rounded-lg flex-row items-center justify-center space-x-2"
-              onPress={verifyCode}
-              disabled={loading}
-            >
-              <Text className="text-white px-2 font-semibold">
-                {loading ? "Verifying..." : "Verify Code"}
-              </Text>
-              <ArrowRight size={20} color="white" />
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              onPress={() => setShowVerificationInput(false)}
-              className="flex-row items-center justify-center mt-4"
-            >
-              <ArrowLeft size={16} color="#3b82f6" />
-              <Text className="text-blue-500 ml-1">Change Phone Number</Text>
-            </TouchableOpacity>
-          </>
-        )}
-
-        <TouchableOpacity
-          onPress={() => router.push("/auth/signin")}
-          className="flex-row items-center justify-center mt-4"
-        >
-          <LogIn size={16} color="#3b82f6" />
-          <Text className="text-blue-500 ml-1">
-            Already have an account? Sign In
-          </Text>
-        </TouchableOpacity>
-      </VStack>
     </View>
   );
 }

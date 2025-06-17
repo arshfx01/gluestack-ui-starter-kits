@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
   View,
-  Text,
   ScrollView,
   TouchableOpacity,
   RefreshControl,
@@ -17,12 +16,19 @@ import {
   getDocs,
 } from "firebase/firestore";
 import { db } from "../config/firebase";
-import { Book, Plus, Users, Calendar, Clock } from "lucide-react-native";
+import {
+  Book,
+  Plus,
+  Users,
+  Calendar,
+  Clock,
+  ChevronRight,
+} from "lucide-react-native";
 import { useToast } from "@/components/ui/toast";
 import { Button, ButtonText } from "@/components/ui/button";
 import { HStack } from "@/components/ui/hstack";
 import { VStack } from "@/components/ui/vstack";
-import { Heading } from "@/components/ui/heading";
+import { Text } from "@/components/ui/text";
 
 interface Class {
   id: string;
@@ -125,8 +131,8 @@ export default function TeacherClasses() {
 
   if (loading) {
     return (
-      <View className="flex-1 justify-center items-center">
-        <Text>Loading...</Text>
+      <View className="flex-1 items-center justify-center bg-white">
+        <Text className="text-gray-600">Loading...</Text>
       </View>
     );
   }
@@ -138,78 +144,101 @@ export default function TeacherClasses() {
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }
     >
-      <VStack className="p-6" space="lg">
+      {/* Header */}
+      <View className="px-6 py-3 bg-white border-b border-border-200">
         <HStack className="justify-between items-center">
-          <Heading className="text-2xl font-bold">My Classes</Heading>
+          <Text fontWeight="bold" className="text-2xl text-gray-900 mb-1">
+            My Classes
+          </Text>
           <TouchableOpacity
-            className="bg-blue-500 p-2 rounded-full"
+            className="p-2 rounded-full bg-primary-500"
             onPress={() => router.push("/teacher/create-class" as any)}
           >
             <Plus size={24} color="white" />
           </TouchableOpacity>
         </HStack>
+      </View>
 
+      <VStack className="p-6 pb-20" space="xl">
         {classes.length === 0 ? (
-          <VStack className="items-center justify-center py-8" space="md">
-            <Book size={48} color="#666" />
-            <Heading className="text-xl font-semibold">No Classes Yet</Heading>
-            <Text className="text-gray-500 text-center">
-              Create your first class to get started
-            </Text>
-            <Button
-              className="mt-4"
-              onPress={() => router.push("/teacher/create-class" as any)}
-            >
-              <ButtonText>Create Class</ButtonText>
-            </Button>
-          </VStack>
+          <View className="bg-white rounded-2xl shadow-sm border border-border-200 p-8">
+            <VStack className="items-center justify-center" space="md">
+              <View className="w-16 h-16 rounded-full bg-primary-50 items-center justify-center">
+                <Book size={32} color="#6366F1" />
+              </View>
+              <Text className="text-xl font-semibold text-gray-900">
+                No Classes Yet
+              </Text>
+              <Text className="text-base text-gray-500 text-center">
+                Create your first class to get started
+              </Text>
+              <Button
+                className="mt-4 bg-primary-500"
+                onPress={() => router.push("/teacher/create-class" as any)}
+              >
+                <ButtonText>Create Class</ButtonText>
+              </Button>
+            </VStack>
+          </View>
         ) : (
-          <VStack className="space-y-4">
+          <VStack space="md">
             {classes.map((classItem) => (
               <TouchableOpacity
                 key={classItem.id}
-                className="bg-white p-4 rounded-lg shadow-sm border border-gray-200"
+                className="bg-white rounded-2xl shadow-sm border border-border-200"
                 onPress={() =>
                   router.push(`/teacher/class/${classItem.id}` as any)
                 }
               >
-                <HStack className="justify-between items-start">
-                  <VStack className="" space="sm">
-                    <Heading className="text-lg font-semibold">
-                      {classItem.name}
-                    </Heading>
-                    <Text className="text-gray-600">{classItem.subject}</Text>
+                <VStack className="p-6" space="md">
+                  <HStack className="justify-between items-start">
+                    <VStack space="sm" className="flex-1">
+                      <Text className="text-xl font-semibold text-gray-900">
+                        {classItem.name}
+                      </Text>
+                      <Text className="text-base text-gray-600">
+                        {classItem.subject}
+                      </Text>
 
-                    {classItem.activeSession && classItem.sessionEndTime && (
-                      <HStack className="items-center mt-2" space="sm">
-                        <Clock size={16} color="#666" />
-                        <Text className="text-gray-600">
-                          Session ends in:{" "}
-                          {Math.max(
-                            0,
-                            Math.floor(
-                              (new Date(classItem.sessionEndTime).getTime() -
-                                new Date().getTime()) /
-                                1000 /
-                                60
-                            )
-                          )}{" "}
-                          minutes
-                        </Text>
-                      </HStack>
-                    )}
-                  </VStack>
-                  <VStack className="items-end" space="sm">
+                      {classItem.activeSession && classItem.sessionEndTime && (
+                        <HStack className="items-center mt-2" space="sm">
+                          <View className="w-8 h-8 rounded-full bg-primary-50 items-center justify-center">
+                            <Clock size={16} color="#6366F1" />
+                          </View>
+                          <Text className="text-sm text-gray-600">
+                            Session ends in:{" "}
+                            {Math.max(
+                              0,
+                              Math.floor(
+                                (new Date(classItem.sessionEndTime).getTime() -
+                                  new Date().getTime()) /
+                                  1000 /
+                                  60
+                              )
+                            )}{" "}
+                            minutes
+                          </Text>
+                        </HStack>
+                      )}
+                    </VStack>
+                    <ChevronRight size={24} color="#6366F1" />
+                  </HStack>
+                  <VStack space="sm">
                     <HStack className="items-center" space="sm">
-                      <Users size={16} color="#666" />
-                      <Text className="text-gray-600">
-                        {classItem.students}
+                      <View className="w-8 h-8 rounded-full bg-primary-50 items-center justify-center">
+                        <Users size={16} color="#6366F1" />
+                      </View>
+                      <Text className="text-sm text-gray-600">
+                        {classItem.students} Students
                       </Text>
                     </HStack>
+
                     {classItem.schedule?.day && classItem.schedule?.time && (
                       <HStack className="items-center" space="sm">
-                        <Calendar size={16} color="#666" />
-                        <Text className="text-gray-600">
+                        <View className="w-8 h-8 rounded-full bg-primary-50 items-center justify-center">
+                          <Calendar size={16} color="#6366F1" />
+                        </View>
+                        <Text className="text-sm text-gray-600">
                           {classItem.schedule.day} | {classItem.schedule.time}
                           {classItem.schedule.room
                             ? ` | Room: ${classItem.schedule.room}`
@@ -218,7 +247,7 @@ export default function TeacherClasses() {
                       </HStack>
                     )}
                   </VStack>
-                </HStack>
+                </VStack>
               </TouchableOpacity>
             ))}
           </VStack>

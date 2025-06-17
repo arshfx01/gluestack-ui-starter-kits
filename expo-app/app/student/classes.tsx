@@ -216,7 +216,7 @@ export default function StudentClasses() {
                           <HStack space="xs" className="items-center">
                             <Users size={16} color="#5c5c5c" />
                             <Text
-                              className="text-gray-900 max-w-[40%]"
+                              className="text-gray-900 max-w-40"
                               ellipsizeMode="tail"
                               numberOfLines={1}
                             >

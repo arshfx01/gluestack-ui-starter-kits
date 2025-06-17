@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, TouchableOpacity, ScrollView, TextInput } from "react-native";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
@@ -14,13 +14,14 @@ import {
   where,
   getDocs,
 } from "firebase/firestore";
-import { Mail, Lock, User, Book, Phone } from "lucide-react-native";
+import { Mail, Lock, User, Book, Phone, ArrowLeft } from "lucide-react-native";
 import { Image } from "@/components/ui/image";
 import { useToast } from "@/components/ui/toast";
 import { Button, ButtonText } from "@/components/ui/button";
-import { Input, InputField, InputSlot } from "@/components/ui/input";
 import { teachersCollection } from "../config/collections";
 import { VStack } from "@/components/ui/vstack";
+import { HStack } from "@/components/ui/hstack";
+import { Text } from "@/components/ui/text";
 
 export default function TeacherAuth() {
   const [isSignUp, setIsSignUp] = useState(false);
@@ -95,109 +96,151 @@ export default function TeacherAuth() {
   };
 
   return (
-    <View className="flex-1 justify-center px-6 bg-white">
-      <View className="items-center mb-8">
-        <Image
-          source={{
-            uri: "https://img.freepik.com/free-photo/abstract-luxury-gradient-blue-background-smooth-dark-blue-with-black-vignette-studio-banner_1258-100541.jpg?semt=ais_hybrid&w=740",
-          }}
-          alt="logo"
-          className="w-20 h-20 rounded-full mb-4"
-        />
-        <Text className="text-3xl text-center" style={{ fontFamily: "BGSB" }}>
-          {isSignUp ? "Teacher Sign Up" : "Teacher Sign In"}
-        </Text>
-        <Text
-          className="text-gray-500 mt-2 text-center"
-          style={{ fontFamily: "BGSB" }}
-        >
-          {isSignUp
-            ? "Create your teacher account"
-            : "Sign in to your teacher account"}
-        </Text>
+    <View className="flex-1 bg-white">
+      {/* Header */}
+      <View className="p-6 bg-white">
+        <TouchableOpacity className="mb-4" onPress={() => router.back()}>
+          <HStack space="sm" className="items-center">
+            <ArrowLeft size={24} color="#9CA3AF" />
+            <Text className="text-gray-600">Back</Text>
+          </HStack>
+        </TouchableOpacity>
       </View>
 
-      <VStack space="md">
-        {isSignUp && (
-          <>
-            <Input>
-              <InputSlot>
-                <User size={20} color="#666" />
-              </InputSlot>
-              <InputField
-                placeholder="Full Name"
-                value={name}
-                onChangeText={setName}
+      <ScrollView className="flex-1">
+        <View className="flex-1 justify-center px-6 py-8">
+          <View className="items-center mb-8">
+            <View className="bg-black border-2 border-border-300 w-20 h-20 rounded-2xl items-center justify-center mb-4 overflow-hidden">
+              <Image
+                source={{
+                  uri: "https://img.freepik.com/free-photo/abstract-luxury-gradient-blue-background-smooth-dark-blue-with-black-vignette-studio-banner_1258-100541.jpg?semt=ais_hybrid&w=740",
+                }}
+                alt="logo"
+                className="w-16 h-16 rounded-full"
               />
-            </Input>
+            </View>
+            <Text
+              fontWeight="bold"
+              className="text-3xl text-gray-900 mb-2"
+              style={{ fontFamily: "BGSB" }}
+            >
+              {isSignUp ? "Teacher Sign Up" : "Teacher Sign In"}
+            </Text>
+            <Text className="text-base text-gray-500 text-center">
+              {isSignUp
+                ? "Create your teacher account"
+                : "Sign in to your teacher account"}
+            </Text>
+          </View>
 
-            <Input>
-              <InputSlot>
-                <Book size={20} color="#666" />
-              </InputSlot>
-              <InputField
-                placeholder="Subject"
-                value={subject}
-                onChangeText={setSubject}
-              />
-            </Input>
+          <VStack space="lg">
+            {isSignUp && (
+              <>
+                <View className="bg-gray-50 p-2 border border-border-200 rounded-2xl">
+                  <HStack space="md" className="items-center">
+                    <View className="w-10 h-10 rounded-full bg-background-50 items-center justify-center">
+                      <User size={20} color="#9CA3AF" />
+                    </View>
+                    <TextInput
+                      placeholder="Full Name"
+                      value={name}
+                      onChangeText={setName}
+                      className="flex-1 text-base text-gray-900"
+                      placeholderTextColor="#9CA3AF"
+                    />
+                  </HStack>
+                </View>
 
-            <Input>
-              <InputSlot>
-                <Phone size={20} color="#666" />
-              </InputSlot>
-              <InputField
-                placeholder="Phone Number"
-                value={phone}
-                onChangeText={setPhone}
-                keyboardType="phone-pad"
-              />
-            </Input>
-          </>
-        )}
+                <View className="bg-gray-50 p-2 border border-border-200 rounded-2xl">
+                  <HStack space="md" className="items-center">
+                    <View className="w-10 h-10 rounded-full bg-background-50 items-center justify-center">
+                      <Book size={20} color="#9CA3AF" />
+                    </View>
+                    <TextInput
+                      placeholder="Subject"
+                      value={subject}
+                      onChangeText={setSubject}
+                      className="flex-1 text-base text-gray-900"
+                      placeholderTextColor="#9CA3AF"
+                    />
+                  </HStack>
+                </View>
 
-        <Input>
-          <InputSlot>
-            <Mail size={20} color="#666" />
-          </InputSlot>
-          <InputField
-            placeholder="Email"
-            value={email}
-            onChangeText={setEmail}
-            keyboardType="email-address"
-            autoCapitalize="none"
-          />
-        </Input>
+                <View className="bg-gray-50 p-2 border border-border-200 rounded-2xl">
+                  <HStack space="md" className="items-center">
+                    <View className="w-10 h-10 rounded-full bg-background-50 items-center justify-center">
+                      <Phone size={20} color="#9CA3AF" />
+                    </View>
+                    <TextInput
+                      placeholder="Phone Number"
+                      value={phone}
+                      onChangeText={setPhone}
+                      keyboardType="phone-pad"
+                      className="flex-1 text-base text-gray-900"
+                      placeholderTextColor="#9CA3AF"
+                    />
+                  </HStack>
+                </View>
+              </>
+            )}
 
-        <Input>
-          <InputSlot>
-            <Lock size={20} color="#666" />
-          </InputSlot>
-          <InputField
-            placeholder="Password"
-            value={password}
-            onChangeText={setPassword}
-            secureTextEntry
-          />
-        </Input>
+            <View className="bg-gray-50 p-2 border border-border-200 rounded-2xl">
+              <HStack space="md" className="items-center">
+                <View className="w-10 h-10 rounded-full bg-background-50 items-center justify-center">
+                  <Mail size={20} color="#9CA3AF" />
+                </View>
+                <TextInput
+                  placeholder="Email"
+                  value={email}
+                  onChangeText={setEmail}
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                  className="flex-1 text-base text-gray-900"
+                  placeholderTextColor="#9CA3AF"
+                />
+              </HStack>
+            </View>
 
-        <Button onPress={handleTeacherAuth} disabled={loading} className="mt-4">
-          <ButtonText>
-            {loading ? "Please wait..." : isSignUp ? "Sign Up" : "Sign In"}
-          </ButtonText>
-        </Button>
+            <View className="bg-gray-50 p-2 border border-border-200 rounded-2xl">
+              <HStack space="md" className="items-center">
+                <View className="w-10 h-10 rounded-full bg-background-50 items-center justify-center">
+                  <Lock size={20} color="#9CA3AF" />
+                </View>
+                <TextInput
+                  placeholder="Password"
+                  value={password}
+                  onChangeText={setPassword}
+                  secureTextEntry
+                  className="flex-1 text-base text-gray-900"
+                  placeholderTextColor="#9CA3AF"
+                />
+              </HStack>
+            </View>
 
-        <TouchableOpacity
-          onPress={() => setIsSignUp(!isSignUp)}
-          className="mt-4"
-        >
-          <Text className="text-center text-blue-500">
-            {isSignUp
-              ? "Already have an account? Sign In"
-              : "Don't have an account? Sign Up"}
-          </Text>
-        </TouchableOpacity>
-      </VStack>
+            <Button
+              action="primary"
+              onPress={handleTeacherAuth}
+              disabled={loading}
+              className="w-full h-14 rounded-2xl shadow-md bg-primary-600 mt-4"
+            >
+              <ButtonText className="text-white font-semibold">
+                {loading ? "Please wait..." : isSignUp ? "Sign Up" : "Sign In"}
+              </ButtonText>
+            </Button>
+
+            <TouchableOpacity
+              onPress={() => setIsSignUp(!isSignUp)}
+              className="mt-4"
+            >
+              <Text className="text-center text-primary-600 font-medium">
+                {isSignUp
+                  ? "Already have an account? Sign In"
+                  : "Don't have an account? Sign Up"}
+              </Text>
+            </TouchableOpacity>
+          </VStack>
+        </View>
+      </ScrollView>
     </View>
   );
 }
