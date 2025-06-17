@@ -1,6 +1,6 @@
 import { VStack } from "@/components/ui/vstack";
 import { ScrollView, View } from "react-native";
-import { SettingsLayout } from "@/screens/settings/layout";
+import { SettingsLayout } from "@/screens/(tabs)/home/layout";
 import { Heading } from "@/components/ui/heading";
 import { Text } from "@/components/ui/text";
 import { HStack } from "@/components/ui/hstack";

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, ScrollView, TouchableOpacity } from "react-native";
+import { View, ScrollView, TouchableOpacity } from "react-native";
 import { useAuth } from "../context/AuthContext";
 import { router } from "expo-router";
 import {
@@ -18,10 +18,13 @@ import {
   Clock,
   MapPin,
   Video,
+  BookOpen,
+  ArrowRight,
 } from "lucide-react-native";
 import { useToast } from "@/components/ui/toast";
 import { VStack } from "@/components/ui/vstack";
 import { HStack } from "@/components/ui/hstack";
+import { Text } from "@/components/ui/text";
 
 interface Class {
   id: string;
@@ -138,62 +141,113 @@ export default function StudentClasses() {
             </Text>
           </View>
         ) : (
-          <VStack space="md">
+          <VStack className="w-full pb-20">
             {classes.map((classItem) => (
               <TouchableOpacity
                 key={classItem.id}
-                className="bg-white p-4 rounded-lg shadow-sm border border-gray-200"
+                className="w-full mb-4 bg-gray-50 border hover:bg-gray-100  border-gray-300 rounded-xl"
                 onPress={() =>
                   router.push(`/student/class/${classItem.id}` as any)
                 }
               >
-                <VStack space="md">
+                <VStack className="w-full">
                   {/* Header */}
-                  <HStack className="flex justify-between items-start">
-                    <View className="flex-1">
-                      <Text className="text-lg font-semibold">
-                        {classItem.name}
-                      </Text>
-                      <Text className="text-gray-600">{classItem.subject}</Text>
-                    </View>
-                    <View className="flex-row items-center">
-                      <Users size={16} color="#666" />
-                      <Text className="text-gray-600 ml-1">
-                        {classItem.teacherName}
+                  <HStack className="flex border-gray-300 p-3 border-b w-full justify-between">
+                    <HStack space="sm" className="items-center">
+                      <View className="bg-gray-100 p-3 rounded-lg">
+                        {/* Book icon or your icon here */}
+                        <BookOpen size={20} color="#5c5c5c" />
+                      </View>
+                      <VStack className="px-2">
+                        <Text
+                          className="text-lg text-gray-900 "
+                          numberOfLines={1}
+                          ellipsizeMode="tail"
+                        >
+                          {classItem.subject}
+                        </Text>
+                        <Text className="text font-semibold text-gray-500">
+                          {/* No of classes held */}count :
+                        </Text>
+                      </VStack>
+                    </HStack>
+
+                    <View className="bg-green-100 items-center flex justify-center gap-2 max-h-8 px-3 py-1 rounded-full">
+                      <Text className="text-green-600 text-sm font-semibold">
+                        LIVE
                       </Text>
                     </View>
                   </HStack>
+                  <VStack space="sm" className="p-3 w-full">
+                    <View className=" ">
+                      <HStack space="xs" className="items-center w-fit">
+                        <Calendar size={16} color="#5c5c5c" />
+                        <Text className="underline">
+                          {classItem.department}
+                        </Text>
+                      </HStack>
+                    </View>
 
-                  {/* Class Details */}
-                  <HStack className="flex justify-between">
-                    <HStack space="xs" className="items-center">
-                      <Calendar size={16} color="#666" />
-                      <Text className="text-gray-600">
-                        {classItem.schedule?.day || "Not scheduled"}
-                      </Text>
-                    </HStack>
-                    <HStack space="xs" className="items-center">
-                      <Clock size={16} color="#666" />
-                      <Text className="text-gray-600">
-                        {classItem.schedule?.time || "Not scheduled"}
-                      </Text>
-                    </HStack>
-                    <HStack space="xs" className="items-center">
-                      <MapPin size={16} color="#666" />
-                      <Text className="text-gray-600">
-                        {classItem.schedule?.room || "Not assigned"}
-                      </Text>
-                    </HStack>
-                  </HStack>
+                    {/* Class Details */}
+                    <HStack className="flex justify-between w-full ">
+                      <VStack className="w-full">
+                        <HStack
+                          space="md"
+                          className="items-center flex justify-between w-full"
+                        >
+                          <HStack space="xs" className="items-center">
+                            <Clock size={16} color="#5c5c5c" />
+                            <Text className="">
+                              {classItem.schedule?.time ?? "Not scheduled"}
+                            </Text>
+                          </HStack>
+                          <HStack space="xs" className="items-center">
+                            <MapPin size={16} color="#5c5c5c" />
+                            <Text className="">
+                              {classItem.schedule?.room ?? "Not assigned"}
+                            </Text>
+                          </HStack>
+                        </HStack>
 
-                  {/* Department and Year */}
-                  <HStack className="flex justify-between items-center pt-2 border-t border-gray-200">
-                    <Text className="text-gray-600">
-                      {classItem.department} - {classItem.year}
-                    </Text>
-                    <Text className="text-gray-600">
-                      Section {classItem.section}
-                    </Text>
+                        <HStack
+                          space="md"
+                          className="items-center  flex w-full justify-between mt-1"
+                        >
+                          <HStack space="xs" className="items-center">
+                            <Users size={16} color="#5c5c5c" />
+                            <Text
+                              className="text-gray-900 max-w-[40%]"
+                              ellipsizeMode="tail"
+                              numberOfLines={1}
+                            >
+                              {classItem.teacherName}
+                            </Text>
+                          </HStack>
+
+                          <HStack space="xs" className="items-center">
+                            <Video size={16} color="#5c5c5c" />
+                            <Text className="text-gray-900">
+                              {classItem.year} - {classItem.semester} Sem{" "}
+                              {classItem.section}
+                            </Text>
+                          </HStack>
+                        </HStack>
+                      </VStack>
+                    </HStack>
+                  </VStack>
+                  <HStack className="flex border-gray-300 p-3 border-t justify-between">
+                    <HStack className="flex gap-2">
+                      <Text className="px-2 py-1 max-w-fit bg-gray-100 rounded-md">
+                        Attended:
+                      </Text>
+
+                      <Text className="px-2 py-1 bg-gray-100 rounded-md">
+                        Missed:
+                      </Text>
+                    </HStack>
+                    <View className="flex items-center justify-center">
+                      <ArrowRight size={16} color="#5c5c5c" />
+                    </View>
                   </HStack>
                 </VStack>
               </TouchableOpacity>

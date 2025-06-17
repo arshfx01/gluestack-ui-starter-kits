@@ -33,7 +33,7 @@ import { Image } from "@/components/ui/image";
 import { router, useRouter } from "expo-router";
 import { ClassSchedule } from "@/components/ClassSchedule";
 import { useAuth } from "@/app/context/AuthContext";
-import { SettingsLayout } from "@/screens/settings/layout";
+import { HomeLayout } from "@/screens/(tabs)/home/layout";
 import { AttendanceGrowthChart } from "@/components/AttendanceGrowthChart";
 import { AnnouncementCard } from "@/components/AnnouncementCard";
 import AnnouncementWidget from "@/components/AnnouncementsWidget";
@@ -460,5 +460,5 @@ const Homepage = () => {
 };
 
 export const Home = () => {
-  return <SettingsLayout children={<Homepage />} />;
+  return <HomeLayout children={<Homepage />} />;
 };

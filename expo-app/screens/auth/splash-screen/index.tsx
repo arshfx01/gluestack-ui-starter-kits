@@ -21,16 +21,32 @@ import {
 import { useColorScheme } from "nativewind";
 import useRouter from "@unitools/router";
 import { AuthLayout } from "../layout";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { X } from "lucide-react-native";
 import { ImageBackground } from "react-native";
 import SplashScreenImage from "./assets/splash-screen-image.png";
+import { useAuth } from "@/app/context/AuthContext";
 
 const SplashScreenWithLeftBackground = () => {
   const router = useRouter();
   const { colorScheme } = useColorScheme();
   const [showActionsheet, setShowActionsheet] = useState(false);
+  const { user, loading } = useAuth();
   const handleClose = () => setShowActionsheet(false);
+
+  useEffect(() => {
+    if (!loading && user) {
+      router.replace("/");
+    }
+  }, [user, loading, router]);
+
+  if (loading) {
+    return null;
+  }
+
+  if (user) {
+    return null;
+  }
 
   return (
     <VStack className="w-full relative h-full items-center justify-between">

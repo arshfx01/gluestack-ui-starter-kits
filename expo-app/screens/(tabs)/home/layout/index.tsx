@@ -10,11 +10,11 @@ import { router, useRouter } from "expo-router";
 import { useAuth } from "@/app/context/AuthContext";
 import NotLoggedIn from "@/components/NotLoggedIn";
 
-type SettingsLayoutProps = {
+type HomeLayoutProps = {
   children: React.ReactNode;
 };
 
-export const SettingsLayout = (props: SettingsLayoutProps) => {
+export const HomeLayout = (props: HomeLayoutProps) => {
   const router = useRouter();
   const { user } = useAuth();
   useEffect(() => {
