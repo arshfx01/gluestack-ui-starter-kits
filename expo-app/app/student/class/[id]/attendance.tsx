@@ -189,10 +189,13 @@ export default function MarkAttendance() {
     <View className="flex-1 bg-white">
       {/* Header */}
       <View className="p-6 bg-white border-b border-border-200">
-        <Text fontWeight="bold" className="text-3xl text-gray-900 mb-1">
+        <Text
+          fontWeight="bold"
+          className="text-3xl text-center text-gray-900 mb-1"
+        >
           {subjectName}
         </Text>
-        <Text className="text-lg text-gray-600">{className}</Text>
+        <Text className="text-lg text-gray-600 text-center">{className}</Text>
       </View>
 
       <VStack space="xl" className="p-6 pb-20">

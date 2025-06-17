@@ -1,11 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  ScrollView,
-  TextInput,
-} from "react-native";
+import { View, TouchableOpacity, ScrollView, TextInput } from "react-native";
 import { useAuth } from "@/app/context/AuthContext";
 import { router, useLocalSearchParams } from "expo-router";
 import {
@@ -24,11 +18,13 @@ import { useToast } from "@/components/ui/toast";
 import { VStack } from "@/components/ui/vstack";
 import { HStack } from "@/components/ui/hstack";
 import { Button, ButtonText } from "@/components/ui/button";
+import { Text } from "@/components/ui/text";
 
 interface Student {
   id: string;
   name: string;
-  rollNumber: string;
+  rollNo: string;
+  email: string;
   present: boolean;
 }
 
@@ -137,21 +133,41 @@ export default function ManageAttendance() {
       // Fetch student details
       const studentDetails: Student[] = [];
       for (const studentId of classData.students || []) {
-        const studentRef = doc(db, "students", studentId);
+        const studentRef = doc(db, "users", studentId);
         const studentSnap = await getDoc(studentRef);
 
         if (studentSnap.exists()) {
           const studentData = studentSnap.data();
           studentDetails.push({
             id: studentId,
-            name: studentData.name || "Unknown",
-            rollNumber: studentData.rollNumber || "N/A",
+            name: studentData.fullName || "Unknown",
+            rollNo: studentData.rollNo || "N/A",
+            email: studentData.email || "N/A",
             present: attendanceSnap.exists()
               ? attendanceSnap.data().present?.includes(studentId) || false
               : false,
           });
         }
       }
+
+      // Sort students by roll number
+      studentDetails.sort((a, b) => {
+        // Handle cases where roll numbers are not available
+        if (a.rollNo === "N/A") return 1;
+        if (b.rollNo === "N/A") return -1;
+
+        // Convert roll numbers to numbers for proper numerical sorting
+        const rollA = parseInt(a.rollNo.replace(/\D/g, ""));
+        const rollB = parseInt(b.rollNo.replace(/\D/g, ""));
+
+        // If both are valid numbers, sort numerically
+        if (!isNaN(rollA) && !isNaN(rollB)) {
+          return rollA - rollB;
+        }
+
+        // If conversion fails, fall back to string comparison
+        return a.rollNo.localeCompare(b.rollNo);
+      });
 
       setStudents(studentDetails);
       setFilteredStudents(studentDetails);
@@ -188,7 +204,7 @@ export default function ManageAttendance() {
     const filtered = students.filter(
       (student) =>
         student.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        student.rollNumber.toLowerCase().includes(searchQuery.toLowerCase())
+        student.rollNo.toLowerCase().includes(searchQuery.toLowerCase())
     );
     setFilteredStudents(filtered);
   }, [searchQuery, students]);
@@ -312,7 +328,7 @@ export default function ManageAttendance() {
   if (loading) {
     return (
       <View className="flex-1 items-center justify-center bg-white">
-        <Text className="text-gray-600">Loading...</Text>
+        <Text className="text-gray-500">Loading...</Text>
       </View>
     );
   }
@@ -320,21 +336,13 @@ export default function ManageAttendance() {
   return (
     <View className="flex-1 bg-white">
       {/* Header */}
-      <View className="p-6 border-b border-gray-200">
-        <TouchableOpacity className="mb-4" onPress={() => router.back()}>
-          <HStack space="sm" className="items-center">
-            <ChevronLeft size={24} color="#666" />
-            <Text className="text-gray-600">Back to Class</Text>
-          </HStack>
-        </TouchableOpacity>
-
-        <Text className="text-2xl font-bold">Manage Attendance</Text>
-      </View>
 
       {/* Session Status */}
-      <View className="p-4 bg-gray-50 border-b border-gray-200">
+      <View className="p-4 bg-background-50 border-b border-border-200">
         <HStack space="sm" className="items-center">
-          <Clock size={20} color="#666" />
+          <View className="w-8 h-8 rounded-full bg-background-100 items-center justify-center">
+            <Clock size={20} color="#9CA3AF" />
+          </View>
           <Text className="text-gray-600">
             {!sessionEndTime ? (
               "No active session"
@@ -353,23 +361,29 @@ export default function ManageAttendance() {
       </View>
 
       {/* Search Bar */}
-      <View className="p-4 border-b border-gray-200">
-        <View className="flex-row items-center bg-gray-100 rounded-lg px-4 py-2">
-          <Search size={20} color="#666" />
+      <View className="p-4 border-b border-border-200">
+        <View className="flex-row items-center bg-background-50 rounded-2xl px-4 py-2 border border-border-200">
+          <View className="w-8 h-8 rounded-full bg-background-100 items-center justify-center">
+            <Search size={20} color="#9CA3AF" />
+          </View>
           <TextInput
-            className="flex-1 ml-2 text-gray-700"
+            className="flex-1 ml-2 text-gray-900"
             placeholder="Search students..."
             value={searchQuery}
             onChangeText={setSearchQuery}
+            placeholderTextColor="#9CA3AF"
           />
         </View>
       </View>
 
       {/* Student List */}
-      <View className="flex-1">
+      <ScrollView className="flex-1">
         {filteredStudents.length === 0 ? (
           <View className="flex-1 items-center justify-center p-6">
-            <Text className="text-gray-500">No students found</Text>
+            <View className="w-16 h-16 rounded-full bg-background-100 items-center justify-center mb-4">
+              <Users size={32} color="#9CA3AF" />
+            </View>
+            <Text className="text-gray-500 text-center">No students found</Text>
           </View>
         ) : (
           <View className="p-4">
@@ -377,32 +391,35 @@ export default function ManageAttendance() {
               <TouchableOpacity
                 key={student.id}
                 onPress={() => toggleAttendance(student.id)}
-                className={`p-4 mb-2 rounded-lg border ${
+                className={`p-4 mb-2 rounded-2xl border ${
                   student.present
                     ? "bg-success-50 border-success-200"
-                    : "bg-white border-gray-200"
+                    : "bg-white border-border-200"
                 }`}
               >
                 <HStack space="sm" className="items-center">
                   <View
-                    className={`w-8 h-8 rounded-full items-center justify-center ${
-                      student.present ? "bg-success-500" : "bg-gray-200"
+                    className={`w-10 h-10 rounded-full items-center justify-center ${
+                      student.present ? "bg-success-500" : "bg-background-100"
                     }`}
                   >
                     <Text
                       className={`text-lg ${
-                        student.present ? "text-white" : "text-gray-600"
+                        student.present ? "text-white" : "text-gray-500"
                       }`}
                     >
                       {student.present ? "✓" : "○"}
                     </Text>
                   </View>
                   <View className="flex-1">
-                    <Text className="font-semibold text-gray-700">
+                    <Text className="text-gray-500 text-sm">
                       {student.name}
                     </Text>
-                    <Text className="text-gray-500">
-                      Roll No: {student.rollNumber}
+                    <Text className="font-semibold text-gray-900 text-lg">
+                      {student.rollNo}
+                    </Text>
+                    <Text className="text-gray-500 text-sm">
+                      {student.email}
                     </Text>
                   </View>
                 </HStack>
@@ -410,23 +427,32 @@ export default function ManageAttendance() {
             ))}
           </View>
         )}
-      </View>
+      </ScrollView>
 
       {/* Action Buttons */}
-      <View className="p-4 border-t border-gray-200">
+      <View className="p-4 border-t border-border-200">
         {!sessionEndTime ? (
-          <Button onPress={startNewSession} className="w-full bg-primary-500">
+          <Button
+            action="primary"
+            onPress={startNewSession}
+            className="w-full h-14 rounded-2xl shadow-md"
+          >
             <ButtonText>Start Attendance Session</ButtonText>
           </Button>
         ) : new Date() > sessionEndTime ? (
-          <Button onPress={startNewSession} className="w-full bg-primary-500">
+          <Button
+            action="primary"
+            onPress={startNewSession}
+            className="w-full h-14 rounded-2xl shadow-md"
+          >
             <ButtonText>Start New Session</ButtonText>
           </Button>
         ) : (
           <Button
+            action="primary"
             onPress={saveAttendance}
             disabled={saving}
-            className="w-full bg-primary-500"
+            className="w-full h-14 rounded-2xl shadow-md"
           >
             <ButtonText>{saving ? "Saving..." : "Save Attendance"}</ButtonText>
           </Button>

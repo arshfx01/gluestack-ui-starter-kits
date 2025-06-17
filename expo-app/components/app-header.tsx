@@ -44,6 +44,7 @@ const dynamicRouteTitles: { [key: string]: string } = {
   posts: "Post Details", // For /posts/[id]
   profile: "Profile Details", // For /profile/[id]
   settings: "Settings", // For /settings/[id]
+  classes: "Classes", // For /teacher/classes or /student/classes
   // Add more mappings as needed
 };
 
@@ -53,19 +54,23 @@ export const AppHeader = () => {
   const segments = useSegments();
   const params = useLocalSearchParams();
 
-  const isTabsRoute = segments[0] === "(tabs)" || segments[0] === "teacher";
+  // Check if the current route is under /(tabs) or exactly teacher/dashboard
+  const isTabsRoute = segments[0] === "(tabs)";
+  const isTeacherDashboard =
+    segments[0] === "teacher" && segments[1] === "dashboard";
   const isTeacherRoute = segments[0] === "teacher";
   const currentRouteName = segments[segments.length - 1] || "Unknown";
 
   // Determine user role based on route and auth
   const userRole = isTeacherRoute ? "teacher" : userProfile?.role || "student";
 
+  // Determine the display title for dynamic header
   let displayTitle = currentRouteName;
   if (currentRouteName === "[id]") {
     const parentRoute = segments[segments.length - 2] || "";
     displayTitle = dynamicRouteTitles[parentRoute] || "Details";
   } else {
-    displayTitle = currentRouteName;
+    displayTitle = dynamicRouteTitles[currentRouteName] || currentRouteName;
   }
 
   const gradientIndex = hashStringToIndex(userFullName, gradientPairs.length);
@@ -83,8 +88,8 @@ export const AppHeader = () => {
   return (
     <VStack>
       <HStack className="flex py-4 px-4 border-b border-border-100 justify-between w-full bg-[#fff]">
-        {isTabsRoute ? (
-          // Default header for /(tabs) routes
+        {isTabsRoute || isTeacherDashboard ? (
+          // Main header for /(tabs) routes or teacher/dashboard
           <>
             <HStack className="items-center flex gap-3">
               <View className="bg-black border-2 border-border-300 w-12 rounded-xl h-12 items-center justify-center flex overflow-hidden">
@@ -191,7 +196,7 @@ export const AppHeader = () => {
             </HStack>
           </>
         ) : (
-          // Header for non-/(tabs) routes: Back button --- Title --- Filter icon
+          // Dynamic header for other routes: Back button --- Title --- Filter icon
           <HStack className="flex justify-between items-center w-full">
             <TouchableOpacity
               onPress={() => router.back()}
@@ -211,13 +216,15 @@ export const AppHeader = () => {
           </HStack>
         )}
       </HStack>
-      <HStack className="flex justify-between px-2 py-1 items-center gap-2 border-b border-border-100 bg-background-50">
-        <HStack className="flex items-center gap-2">
-          <Megaphone size={20} color="#a9a9a9" />
-          <Text>Announcement: Mid term 2 is near!...</Text>
+      {(isTabsRoute || isTeacherDashboard) && (
+        <HStack className="flex justify-between px-2 py-1 items-center gap-2 border-b border-border-100 bg-background-50">
+          <HStack className="flex items-center gap-2">
+            <Megaphone size={20} color="#a9a9a9" />
+            <Text>Announcement: Mid term 2 is near!...</Text>
+          </HStack>
+          <ArrowRight size={20} color="#a9a9a9" />
         </HStack>
-        <ArrowRight size={20} color="#a9a9a9" />
-      </HStack>
+      )}
     </VStack>
   );
 };
