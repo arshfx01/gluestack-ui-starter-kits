@@ -179,41 +179,34 @@ const BottomBtns = (props: Props) => {
                 <Text className="text-typography-500">No classes found.</Text>
               </VStack>
             ) : (
-              liveClasses.map((classItem) => (
-                <ActionsheetItem
-                  key={classItem.id}
-                  onPress={
-                    classItem.isActive
-                      ? () => handleSelectClass(classItem.id)
-                      : undefined
-                  }
-                  disabled={!classItem.isActive}
-                  className={`flex-row items-center justify-between ${
-                    classItem.isActive ? "" : "opacity-50"
-                  }`}
-                >
-                  <VStack>
-                    <ActionsheetItemText className="text-base font-medium text-typography-950">
-                      {classItem.subject} - {classItem.name}
-                    </ActionsheetItemText>
-                    <HStack space="xs" className="items-center">
-                      <Clock size={14} color="#6b7280" />
-                      <ActionsheetItemText className="text-sm text-typography-500">
-                        {classItem.schedule?.time}
+              liveClasses
+                .filter((classItem) => classItem.isActive)
+                .map((classItem) => (
+                  <ActionsheetItem
+                    key={classItem.id}
+                    onPress={() => handleSelectClass(classItem.id)}
+                    className="flex-row items-center justify-between"
+                  >
+                    <VStack>
+                      <ActionsheetItemText className="text-base font-medium text-typography-950">
+                        {classItem.subject} - {classItem.name}
                       </ActionsheetItemText>
-                      <MapPin size={14} color="#6b7280" />
-                      <ActionsheetItemText className="text-sm text-typography-500">
-                        {classItem.schedule?.room}
-                      </ActionsheetItemText>
-                      {classItem.isActive && (
+                      <HStack space="xs" className="items-center">
+                        <Clock size={14} color="#6b7280" />
+                        <ActionsheetItemText className="text-sm text-typography-500">
+                          {classItem.schedule?.time}
+                        </ActionsheetItemText>
+                        <MapPin size={14} color="#6b7280" />
+                        <ActionsheetItemText className="text-sm text-typography-500">
+                          {classItem.schedule?.room}
+                        </ActionsheetItemText>
                         <Text className="ml-2 text-success-600 font-bold">
                           Active
                         </Text>
-                      )}
-                    </HStack>
-                  </VStack>
-                </ActionsheetItem>
-              ))
+                      </HStack>
+                    </VStack>
+                  </ActionsheetItem>
+                ))
             )}
           </VStack>
         </ActionsheetContent>
