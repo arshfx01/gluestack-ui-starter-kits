@@ -62,14 +62,9 @@ const BottomBtns = (props: Props) => {
   const isStudent = userProfile?.role === "student";
 
   const fetchLiveClasses = async () => {
-    if (!user) return;
-
     try {
-      // Always fetch all classes the user is enrolled in (student)
-      const q = query(
-        collection(db, "classes"),
-        where("students", "array-contains", user.uid)
-      );
+      // Fetch all classes, not just those the user is enrolled in
+      const q = query(collection(db, "classes"));
       const querySnapshot = await getDocs(q);
       const currentTime = new Date();
       const today = new Date().toISOString().split("T")[0];
@@ -166,16 +161,21 @@ const BottomBtns = (props: Props) => {
 
       <Actionsheet isOpen={showActionsheet} onClose={handleCloseActionsheet}>
         <ActionsheetBackdrop />
-        <ActionsheetContent>
+        <ActionsheetContent className="bg-background-100 p-0">
           <ActionsheetDragIndicatorWrapper>
             <ActionsheetDragIndicator />
           </ActionsheetDragIndicatorWrapper>
-          <VStack space="md" className="p-4 w-full">
-            <Text className="text-lg font-semibold text-typography-950 mb-2">
-              Select Live Class to Mark Attendance
-            </Text>
+          <VStack space="md" className=" w-full pb-20">
+            <View className="p-4 text-center border-b border-border-300">
+              <Text className="text-lg font-semibold text-center text-typography-950 ">
+                Select Live Class to Mark Attendance
+              </Text>
+            </View>
             {liveClasses.length === 0 ? (
-              <VStack space="sm" className="items-center justify-center py-10">
+              <VStack
+                space="sm"
+                className="items-center justify-center py-10 px-4 pb-20"
+              >
                 <Text className="text-typography-500">No classes found.</Text>
               </VStack>
             ) : (
@@ -185,7 +185,7 @@ const BottomBtns = (props: Props) => {
                   <ActionsheetItem
                     key={classItem.id}
                     onPress={() => handleSelectClass(classItem.id)}
-                    className="flex-row items-center justify-between"
+                    className="flex-row items-center justify-between p-4 border-b border-border-300 hover:bg-background-100 active:bg-background-100"
                   >
                     <VStack>
                       <ActionsheetItemText className="text-base font-medium text-typography-950">

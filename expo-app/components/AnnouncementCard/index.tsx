@@ -12,6 +12,7 @@ import {
   AlertTriangle,
   Info,
   Bell,
+  ArrowRight,
 } from "lucide-react-native";
 import { router } from "expo-router";
 
@@ -64,17 +65,31 @@ export const AnnouncementCard = ({
   return (
     <TouchableOpacity
       onPress={() => router.push(`/announcements/${id}`)}
-      className="bg-white p-4 rounded-lg border border-border-300"
+      className="bg-background-100  rounded-xl  border border-border-300"
     >
-      <VStack space="sm">
-        <Text className="text-lg font-bold">{title}</Text>
-        <Text className="text-typography-600" numberOfLines={2}>
-          {description}
-        </Text>
-        <HStack className="justify-between items-center">
-          <HStack className="items-center space-x-2">
+      <VStack>
+        <HStack
+          space="md"
+          className="flex-row items-center justify-between p-4 border-b border-border-300"
+        >
+          <Text
+            className="text-lg text-typography-950 max-w-[91%]"
+            numberOfLines={1}
+          >
+            {title}
+          </Text>
+          <ArrowRight size={20} color="#6b7280" />
+        </HStack>
+        <View className="flex-row items-center justify-between p-4  border-b border-border-300">
+          <Text className="text-typography-600" numberOfLines={2}>
+            {description}
+          </Text>
+        </View>
+        <HStack className="justify-between p-4 items-center">
+          <HStack className="items-center space-x-2" space="sm">
             <Badge
               variant="outline"
+              className="rounded-md"
               action={priority === "High" ? "error" : "muted"}
             >
               <BadgeText>{priority}</BadgeText>

@@ -88,7 +88,7 @@ export default function AnnouncementDetail() {
         <VStack space="md" className="w-full">
           <Text
             className="text-4xl  text-typography-900"
-            style={{ fontFamily: "BGSB" }}
+            style={{ fontFamily: "InterBold" }}
           >
             {announcement.title}
           </Text>
@@ -97,15 +97,15 @@ export default function AnnouncementDetail() {
             space="md"
           >
             <Badge
-              variant="outline"
+              variant="solid"
               action={announcement.priority === "High" ? "error" : "muted"}
-              className="px-3 py-1"
+              className="px-3 py-1 rounded-md"
             >
               <BadgeText className="font-medium">
                 {announcement.priority}
               </BadgeText>
             </Badge>
-            <HStack className="items-center space-x-1">
+            <HStack className="items-center space-x-1" space="sm">
               <Calendar size={16} color="#6b7280" />
               <Text className="text-typography-500">{announcement.date}</Text>
             </HStack>
@@ -115,7 +115,7 @@ export default function AnnouncementDetail() {
         {/* Description Section */}
         <View className="py-4 rounded-xl">
           <Text
-            className="text-typography-700 whitespace-pre-line  text-lg"
+            className="text-typography-900 whitespace-pre-line  text-lg"
             style={{ lineHeight: 21, fontFamily: "InterSemiBold" }}
           >
             {announcement.fullDescription}
@@ -125,13 +125,13 @@ export default function AnnouncementDetail() {
         {/* Footer Section */}
         <View className="bg-background-50 p-4 rounded-xl">
           <HStack className="justify-between items-center">
-            <HStack className="items-center space-x-2">
+            <HStack className="items-center space-x-2" space="sm">
               <User size={16} color="#6b7280" />
               <Text className="text-typography-500">
                 Posted by {announcement.postedBy}
               </Text>
             </HStack>
-            <HStack className="items-center space-x-2">
+            <HStack className="items-center space-x-2" space="sm">
               <Clock size={16} color="#6b7280" />
               <Text className="text-typography-500">
                 {announcement.postedWhen}
