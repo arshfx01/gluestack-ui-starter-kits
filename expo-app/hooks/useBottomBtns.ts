@@ -13,6 +13,9 @@ export const useBottomBtns = () => {
       "/teacher/create-class",
       "/teacher/class/[id]/students",
       "/student/class/[id]/attendance",
+      "/teacher/schedule",
+      "/teacher/classes",
+      "/teacher/students",
     ];
 
     return hiddenPaths.map((path) => {

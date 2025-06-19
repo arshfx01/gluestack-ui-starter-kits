@@ -147,7 +147,7 @@ export default function TeacherDashboard() {
           </View>
           <VStack space="md" className="p-6">
             <TouchableOpacity
-              className="bg-gray-50 p-4 rounded-xl"
+              className=" px-0 py-4 rounded-xl"
               onPress={() => router.push("/teacher/classes" as any)}
             >
               <HStack space="md" className="items-center">
@@ -167,7 +167,7 @@ export default function TeacherDashboard() {
             </TouchableOpacity>
 
             <TouchableOpacity
-              className="bg-gray-50 p-4 rounded-xl"
+              className=" px-0 py-4 rounded-xl"
               onPress={() => router.push("/teacher/students" as any)}
             >
               <HStack space="md" className="items-center">
@@ -187,7 +187,7 @@ export default function TeacherDashboard() {
             </TouchableOpacity>
 
             <TouchableOpacity
-              className="bg-gray-50 p-4 rounded-xl"
+              className=" px-0 py-4 rounded-xl"
               onPress={() => router.push("/teacher/schedule" as any)}
             >
               <HStack space="md" className="items-center">

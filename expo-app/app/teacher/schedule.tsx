@@ -1,11 +1,25 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, ScrollView, TouchableOpacity } from "react-native";
+import { View, ScrollView, TouchableOpacity } from "react-native";
 import { useAuth } from "../context/AuthContext";
 import { router } from "expo-router";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../config/firebase";
-import { Calendar, Clock, Plus, Users, Book } from "lucide-react-native";
+import {
+  Calendar,
+  Clock,
+  Plus,
+  Users,
+  Book,
+  ChevronLeft,
+  DoorOpen,
+  Layers3,
+  Hash,
+} from "lucide-react-native";
 import { useToast } from "@/components/ui/toast";
+import { Text } from "@/components/ui/text";
+import { VStack } from "@/components/ui/vstack";
+import { HStack } from "@/components/ui/hstack";
+import { useBottomBtns } from "@/hooks/useBottomBtns";
 
 interface ScheduleItem {
   id: string;
@@ -35,6 +49,11 @@ export default function TeacherSchedule() {
   const [schedule, setSchedule] = useState<ScheduleItem[]>([]);
   const [loading, setLoading] = useState(true);
   const toast = useToast();
+  const { hide } = useBottomBtns();
+
+  React.useEffect(() => {
+    hide();
+  }, [hide]);
 
   useEffect(() => {
     const fetchSchedule = async () => {
@@ -112,92 +131,107 @@ export default function TeacherSchedule() {
   }
 
   return (
-    <ScrollView className="flex-1 bg-white">
-      <View className="p-6">
-        <View className="flex-row justify-between items-center mb-6">
-          <Text className="text-2xl font-bold">Schedule</Text>
-          <TouchableOpacity
-            className="bg-blue-500 p-2 rounded-full"
-            onPress={() => router.push("/teacher/create-class" as any)}
-          >
-            <Plus size={24} color="white" />
-          </TouchableOpacity>
-        </View>
+    <View className="flex-1 bg-white">
+      {/* Header */}
 
-        {schedule.length === 0 ? (
-          <View className="items-center justify-center py-8">
-            <Calendar size={48} color="#666" />
-            <Text className="text-xl font-semibold mt-4">No Schedule Yet</Text>
-            <Text className="text-gray-500 text-center mt-2">
-              Add schedule for your classes to get started
-            </Text>
-          </View>
-        ) : (
-          <View className="space-y-4">
-            {DAYS.map((day) => {
-              const daySchedule = schedule.filter((item) => item.day === day);
-              return (
-                <View key={day} className="mb-6">
-                  <Text className="text-lg font-semibold mb-3">{day}</Text>
-                  {daySchedule.length === 0 ? (
-                    <Text className="text-gray-500 italic">
-                      No classes scheduled
+      <ScrollView className="flex-1 mb-24">
+        <View className="p-6">
+          {schedule.length === 0 ? (
+            <View className="items-center justify-center py-8">
+              <Calendar size={48} color="#666" />
+              <Text className="text-xl font-semibold mt-4">
+                No Schedule Yet
+              </Text>
+              <Text className="text-gray-500 text-center mt-2">
+                Add schedule for your classes to get started
+              </Text>
+            </View>
+          ) : (
+            <VStack space="xl">
+              {DAYS.map((day) => {
+                const daySchedule = schedule.filter((item) => item.day === day);
+                if (daySchedule.length === 0) return null;
+                return (
+                  <View key={day} className="mb-8">
+                    <Text className="text-lg font-semibold mb-3 text-primary-600">
+                      {day}
                     </Text>
-                  ) : (
-                    <View className="space-y-3">
+                    <VStack space="md">
                       {daySchedule.map((item) => (
                         <TouchableOpacity
                           key={item.id}
-                          className="bg-white p-4 rounded-lg shadow-sm border border-gray-200"
+                          className="bg-gray-50 p-4 rounded-2xl border border-border-200 flex-row items-center shadow-sm"
                           onPress={() =>
                             router.push(`/teacher/class/${item.id}` as any)
                           }
+                          activeOpacity={0.85}
                         >
-                          <View className="flex-row justify-between items-start">
-                            <View className="flex-1">
-                              <Text className="text-lg font-semibold">
-                                {item.className}
+                          <View className="w-10 h-10 rounded-full bg-background-50 items-center justify-center mr-4">
+                            <Book size={22} color="#9CA3AF" />
+                          </View>
+                          <View className="flex-1">
+                            <Text className="text-lg font-semibold text-gray-900">
+                              {item.className}
+                            </Text>
+                            <Text className="text-gray-600 mb-1">
+                              {item.subject}
+                            </Text>
+                            <HStack space="sm" className="items-center mb-1">
+                              <Layers3 size={16} color="#666" />
+                              <Text className="text-gray-600 ml-1">
+                                {item.year}, Sem {item.semester}
                               </Text>
-                              <Text className="text-gray-600">
-                                {item.subject}
+                              <Hash size={16} color="#666" className="ml-3" />
+                              <Text className="text-gray-600 ml-1">
+                                Sec {item.section}
                               </Text>
-                              <View className="flex-row items-center mt-2 space-x-4">
-                                <View className="flex-row items-center">
-                                  <Book size={16} color="#666" />
-                                  <Text className="text-gray-600 ml-1">
-                                    {item.department}
-                                  </Text>
-                                </View>
-                                <View className="flex-row items-center">
-                                  <Users size={16} color="#666" />
-                                  <Text className="text-gray-600 ml-1">
-                                    {item.students} students
-                                  </Text>
-                                </View>
-                              </View>
-                            </View>
-                            <View className="items-end">
-                              <View className="flex-row items-center space-x-2">
-                                <Clock size={16} color="#666" />
-                                <Text className="text-gray-600">
-                                  {item.time}
-                                </Text>
-                              </View>
-                              <Text className="text-gray-500 mt-1">
-                                Room: {item.room}
+                            </HStack>
+                            <HStack space="sm" className="items-center">
+                              <Book size={16} color="#666" />
+                              <Text className="text-gray-600 ml-1">
+                                {item.department}
                               </Text>
-                            </View>
+                              <Users size={16} color="#666" className="ml-3" />
+                              <Text className="text-gray-600 ml-1">
+                                {item.students} students
+                              </Text>
+                            </HStack>
+                          </View>
+                          <View className="items-end ml-4">
+                            <HStack space="sm" className="items-center">
+                              <Clock size={16} color="#666" />
+                              <Text className="text-gray-600 ml-1">
+                                {item.time}
+                              </Text>
+                            </HStack>
+                            <HStack space="sm" className="items-center mt-2">
+                              <DoorOpen size={16} color="#666" />
+                              <Text className="text-gray-500 ml-1">
+                                Room {item.room}
+                              </Text>
+                            </HStack>
                           </View>
                         </TouchableOpacity>
                       ))}
-                    </View>
-                  )}
-                </View>
-              );
-            })}
-          </View>
-        )}
+                    </VStack>
+                  </View>
+                );
+              })}
+            </VStack>
+          )}
+        </View>
+      </ScrollView>
+      <View className="absolute left-0 right-0 bottom-0 p-4 bg-white border-t border-gray-200">
+        <TouchableOpacity
+          className="w-full h-14 rounded-2xl shadow-md bg-primary-600 items-center justify-center flex-row"
+          onPress={() => router.push("/teacher/create-class" as any)}
+          activeOpacity={0.85}
+        >
+          <Text className="text-white font-semibold text-lg">
+            Create Schedule
+          </Text>
+        </TouchableOpacity>
       </View>
-    </ScrollView>
+    </View>
   );
 }

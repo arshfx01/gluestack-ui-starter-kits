@@ -13,9 +13,10 @@ import {
   Sparkles,
   Clock,
   MapPin,
+  Book,
 } from "lucide-react-native";
 import { TouchableOpacity, View } from "react-native";
-import { router } from "expo-router";
+import { router, useSegments } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
 import { HomeIcon } from "./HomeIcon";
 import { useBottomBtns } from "../hooks/useBottomBtns";
@@ -59,7 +60,9 @@ const BottomBtns = (props: Props) => {
   const { user, userProfile } = useAuth();
   const [showActionsheet, setShowActionsheet] = React.useState(false);
   const [liveClasses, setLiveClasses] = React.useState<LiveClass[]>([]);
-  const isStudent = userProfile?.role === "student";
+  const segments = useSegments();
+  const isTeacherRoute = segments[0] === "teacher";
+  const userRole = isTeacherRoute ? "teacher" : userProfile?.role || "student";
 
   const fetchLiveClasses = async () => {
     try {
@@ -123,7 +126,11 @@ const BottomBtns = (props: Props) => {
       <HStack className="flex items-center justify-between">
         <TouchableOpacity
           onPress={() => {
-            router.push("/(tabs)");
+            if (userRole === "teacher") {
+              router.push("/teacher/dashboard");
+            } else {
+              router.push("/(tabs)");
+            }
           }}
           className="bg-white/50 border border-background-200 rounded-full p-4 hover:bg-background-200 flex items-center justify-center"
         >
@@ -131,27 +138,47 @@ const BottomBtns = (props: Props) => {
         </TouchableOpacity>
 
         {user ? (
-          <Button
-            className="h-14 bg-black flex gap-4 w-[60%] rounded-2xl"
-            onPress={handleOpenActionsheet}
-            variant="solid"
-            action="primary"
-          >
-            <ButtonIcon>
-              <Sparkles size={18} strokeWidth={2} color="white" />
-            </ButtonIcon>
-            <ButtonText className="" style={{ fontFamily: "BGSB" }}>
-              Mark
-            </ButtonText>
-            <ButtonIcon>
-              <CheckIcon size={20} strokeWidth={2} color="white" />
-            </ButtonIcon>
-          </Button>
+          userRole === "teacher" ? (
+            <Button
+              className="h-14 bg-black flex gap-4 w-[60%] rounded-2xl"
+              onPress={() => router.push("/teacher/classes")}
+              variant="solid"
+              action="primary"
+            >
+              <ButtonIcon>
+                <Book size={20} strokeWidth={2} color="white" />
+              </ButtonIcon>
+              <ButtonText className="" style={{ fontFamily: "BGSB" }}>
+                My Classes
+              </ButtonText>
+            </Button>
+          ) : (
+            <Button
+              className="h-14 bg-black  flex gap-4 w-[60%] rounded-2xl"
+              onPress={handleOpenActionsheet}
+              variant="solid"
+              action="primary"
+            >
+              <ButtonIcon>
+                <Sparkles size={18} strokeWidth={2} color="white" />
+              </ButtonIcon>
+              <ButtonText className="" style={{ fontFamily: "BGSB" }}>
+                Mark
+              </ButtonText>
+              <ButtonIcon>
+                <CheckIcon size={20} strokeWidth={2} color="white" />
+              </ButtonIcon>
+            </Button>
+          )
         ) : null}
 
         <TouchableOpacity
           onPress={() => {
-            router.push("/settings");
+            if (userRole === "teacher") {
+              router.push("/teacher/settings" as any);
+            } else {
+              router.push("/settings");
+            }
           }}
           className="bg-white-50 border border-background-200 rounded-full p-4 hover:bg-background-200 flex items-center justify-center"
         >

@@ -138,121 +138,118 @@ export default function TeacherClasses() {
   }
 
   return (
-    <ScrollView
-      className="flex-1 bg-white"
-      refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-      }
-    >
+    <View className="flex-1 bg-white">
       {/* Header */}
-      <View className="px-6 py-3 bg-white border-b border-border-200">
-        <HStack className="justify-between items-center">
-          <Text fontWeight="bold" className="text-2xl text-gray-900 mb-1">
-            My Classes
-          </Text>
-          <TouchableOpacity
-            className="p-2 rounded-full bg-primary-500"
-            onPress={() => router.push("/teacher/create-class" as any)}
-          >
-            <Plus size={24} color="white" />
-          </TouchableOpacity>
-        </HStack>
-      </View>
 
-      <VStack className="p-6 pb-20" space="xl">
-        {classes.length === 0 ? (
-          <View className="bg-white rounded-2xl shadow-sm border border-border-200 p-8">
-            <VStack className="items-center justify-center" space="md">
-              <View className="w-16 h-16 rounded-full bg-backround-50 items-center justify-center">
-                <Book size={32} color="#9CA3AF" />
-              </View>
-              <Text className="text-xl font-semibold text-gray-900">
-                No Classes Yet
-              </Text>
-              <Text className="text-base text-gray-500 text-center">
-                Create your first class to get started
-              </Text>
-              <Button
-                className="mt-4 bg-primary-500"
-                onPress={() => router.push("/teacher/create-class" as any)}
-              >
-                <ButtonText>Create Class</ButtonText>
-              </Button>
-            </VStack>
-          </View>
-        ) : (
-          <VStack space="md">
-            {classes.map((classItem) => (
-              <TouchableOpacity
-                key={classItem.id}
-                className="bg-white rounded-2xl shadow-sm border border-border-200"
-                onPress={() =>
-                  router.push(`/teacher/class/${classItem.id}` as any)
-                }
-              >
-                <VStack className="p-6" space="md">
-                  <HStack className="justify-between items-start">
-                    <VStack space="sm" className="flex-1">
-                      <Text className="text-xl font-semibold text-gray-900">
-                        {classItem.name}
-                      </Text>
-                      <Text className="text-base text-gray-600">
-                        {classItem.subject}
-                      </Text>
+      <ScrollView
+        className="flex-1"
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+        contentContainerStyle={{ paddingBottom: 100 }}
+      >
+        <VStack className="p-6" space="xl">
+          {classes.length === 0 ? (
+            <View className="bg-white rounded-2xl shadow-sm border border-border-200 p-8">
+              <VStack className="items-center justify-center" space="md">
+                <View className="w-16 h-16 rounded-full bg-backround-50 items-center justify-center">
+                  <Book size={32} color="#9CA3AF" />
+                </View>
+                <Text className="text-xl font-semibold text-gray-900">
+                  No Classes Yet
+                </Text>
+                <Text className="text-base text-gray-500 text-center">
+                  Create your first class to get started
+                </Text>
+              </VStack>
+            </View>
+          ) : (
+            <VStack space="md">
+              {classes.map((classItem) => (
+                <TouchableOpacity
+                  key={classItem.id}
+                  className="bg-white rounded-2xl shadow-sm border border-border-200"
+                  onPress={() =>
+                    router.push(`/teacher/class/${classItem.id}` as any)
+                  }
+                >
+                  <VStack className="p-6" space="md">
+                    <HStack className="justify-between items-start">
+                      <VStack space="sm" className="flex-1">
+                        <Text className="text-xl font-semibold text-gray-900">
+                          {classItem.name}
+                        </Text>
+                        <Text className="text-base text-gray-600">
+                          {classItem.subject}
+                        </Text>
 
-                      {classItem.activeSession && classItem.sessionEndTime && (
-                        <HStack className="items-center mt-2" space="sm">
+                        {classItem.activeSession &&
+                          classItem.sessionEndTime && (
+                            <HStack className="items-center mt-2" space="sm">
+                              <View className="w-8 h-8 rounded-full bg-backround-50 items-center justify-center">
+                                <Clock size={16} color="#9CA3AF" />
+                              </View>
+                              <Text className="text-sm text-gray-600">
+                                Session ends in:{" "}
+                                {Math.max(
+                                  0,
+                                  Math.floor(
+                                    (new Date(
+                                      classItem.sessionEndTime
+                                    ).getTime() -
+                                      new Date().getTime()) /
+                                      1000 /
+                                      60
+                                  )
+                                )}{" "}
+                                minutes
+                              </Text>
+                            </HStack>
+                          )}
+                      </VStack>
+                      <ChevronRight size={24} color="#9CA3AF" />
+                    </HStack>
+                    <VStack space="sm">
+                      <HStack className="items-center" space="sm">
+                        <View className="w-8 h-8 rounded-full bg-backround-50 items-center justify-center">
+                          <Users size={16} color="#9CA3AF" />
+                        </View>
+                        <Text className="text-sm text-gray-600">
+                          {classItem.students} Students
+                        </Text>
+                      </HStack>
+
+                      {classItem.schedule?.day && classItem.schedule?.time && (
+                        <HStack className="items-center" space="sm">
                           <View className="w-8 h-8 rounded-full bg-backround-50 items-center justify-center">
-                            <Clock size={16} color="#9CA3AF" />
+                            <Calendar size={16} color="#9CA3AF" />
                           </View>
                           <Text className="text-sm text-gray-600">
-                            Session ends in:{" "}
-                            {Math.max(
-                              0,
-                              Math.floor(
-                                (new Date(classItem.sessionEndTime).getTime() -
-                                  new Date().getTime()) /
-                                  1000 /
-                                  60
-                              )
-                            )}{" "}
-                            minutes
+                            {classItem.schedule.day} | {classItem.schedule.time}
+                            {classItem.schedule.room
+                              ? ` | Room: ${classItem.schedule.room}`
+                              : ""}
                           </Text>
                         </HStack>
                       )}
                     </VStack>
-                    <ChevronRight size={24} color="#9CA3AF" />
-                  </HStack>
-                  <VStack space="sm">
-                    <HStack className="items-center" space="sm">
-                      <View className="w-8 h-8 rounded-full bg-backround-50 items-center justify-center">
-                        <Users size={16} color="#9CA3AF" />
-                      </View>
-                      <Text className="text-sm text-gray-600">
-                        {classItem.students} Students
-                      </Text>
-                    </HStack>
-
-                    {classItem.schedule?.day && classItem.schedule?.time && (
-                      <HStack className="items-center" space="sm">
-                        <View className="w-8 h-8 rounded-full bg-backround-50 items-center justify-center">
-                          <Calendar size={16} color="#9CA3AF" />
-                        </View>
-                        <Text className="text-sm text-gray-600">
-                          {classItem.schedule.day} | {classItem.schedule.time}
-                          {classItem.schedule.room
-                            ? ` | Room: ${classItem.schedule.room}`
-                            : ""}
-                        </Text>
-                      </HStack>
-                    )}
                   </VStack>
-                </VStack>
-              </TouchableOpacity>
-            ))}
-          </VStack>
-        )}
-      </VStack>
-    </ScrollView>
+                </TouchableOpacity>
+              ))}
+            </VStack>
+          )}
+        </VStack>
+      </ScrollView>
+      {/* Fixed bottom create class button */}
+      <View className="absolute left-0 right-0 bottom-0 p-4 bg-white border-t border-gray-200">
+        <TouchableOpacity
+          className="w-full h-14 rounded-2xl shadow-md bg-primary-600 items-center justify-center flex-row"
+          onPress={() => router.push("/teacher/create-class" as any)}
+          activeOpacity={0.85}
+        >
+          <Text className="text-white font-semibold text-lg">Create Class</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
   );
 }
