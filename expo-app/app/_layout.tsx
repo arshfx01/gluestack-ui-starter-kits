@@ -19,6 +19,7 @@ import { router } from "expo-router";
 import { LoadingScreen } from "@/components/LoadingScreen";
 import * as NavigationBar from "expo-navigation-bar";
 import { Platform } from "react-native";
+import ConnectionBanner from "@/components/ConnectionBanner";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -96,6 +97,7 @@ function RootLayoutNav() {
         <ThemeProvider value={DefaultTheme}>
           <StatusBar style="dark" />
           <SafeAreaView style={{ flex: 1 }}>
+            <ConnectionBanner />
             {user && <AppHeader />}
             <Stack screenOptions={{ headerShown: false }}></Stack>
             {user && <BottomBtns />}
