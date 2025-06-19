@@ -352,7 +352,7 @@ const Homepage = () => {
             }}
           >
             <GridItem
-              className="bg-background-50 rounded-xl  flex justify-start items-center w-full hover:bg-background-200 text-center"
+              className="bg-background-50 border border-border-100 rounded-xl  flex justify-start items-center w-full hover:bg-background-200 text-center"
               _extra={{
                 className: "col-span-6 w-full",
               }}
@@ -368,7 +368,7 @@ const Homepage = () => {
               </Text>
             </GridItem>
             <GridItem
-              className="bg-background-50 rounded-xl  w-full hover:bg-background-200 text-center"
+              className="bg-background-50 border border-border-100 rounded-xl  w-full hover:bg-background-200 text-center"
               _extra={{
                 className: "col-span-6 w-full",
               }}
@@ -386,7 +386,7 @@ const Homepage = () => {
               </Pressable>
             </GridItem>
             <GridItem
-              className="bg-background-50 rounded-xl w-full  hover:bg-background-200 text-center"
+              className="bg-background-50 border border-border-100 rounded-xl w-full  hover:bg-background-200 text-center"
               _extra={{
                 className: "col-span-6 w-full",
               }}

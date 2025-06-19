@@ -130,8 +130,6 @@ export default function StudentClasses() {
   return (
     <ScrollView className="flex-1 bg-white">
       <View className="p-6">
-        <Text className="text-2xl font-bold mb-6">All Classes</Text>
-
         {classes.length === 0 ? (
           <View className="items-center justify-center py-8">
             <Book size={48} color="#666" />
@@ -160,7 +158,7 @@ export default function StudentClasses() {
                       </View>
                       <VStack className="px-2">
                         <Text
-                          className="text-lg text-gray-900 "
+                          className="text-lg text-typography-950 "
                           numberOfLines={1}
                           ellipsizeMode="tail"
                         >

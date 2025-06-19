@@ -7,6 +7,7 @@ import {
   ArrowLeft,
   ArrowRight,
   Bell,
+  BookCheck,
   Filter,
   LogOut,
   Megaphone,
@@ -153,12 +154,12 @@ export const AppHeader = () => {
                     }}
                   >
                     <View className="flex justify-center items-center border-border-300 p-3 rounded-full border bg-background-50">
-                      <Bell color="#000" size={20} />
+                      <BookCheck color="#000" size={20} />
                     </View>
                   </Pressable>
                   <Pressable
                     onPress={() => {
-                      router.push("/teacher/dashboard" as any);
+                      router.push("/announcements" as any);
                     }}
                   >
                     <View className="flex justify-center items-center border-border-300 p-3 rounded-full border bg-background-50">

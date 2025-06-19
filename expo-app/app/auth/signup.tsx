@@ -37,6 +37,26 @@ import { useToast } from "@/components/ui/toast";
 import { Button, ButtonText } from "@/components/ui/button";
 import { Text } from "@/components/ui/text";
 
+// Helper to map Firebase Auth error codes to user-friendly messages
+const getFriendlyError = (code: string, fallback?: string) => {
+  switch (code) {
+    case "auth/invalid-email":
+      return "Invalid email address.";
+    case "auth/email-already-in-use":
+      return "This email is already registered.";
+    case "auth/weak-password":
+      return "Password is too weak. Please use at least 6 characters.";
+    case "auth/too-many-requests":
+      return "Too many attempts. Please try again later.";
+    case "auth/invalid-verification-code":
+      return "Invalid verification code.";
+    case "auth/invalid-phone-number":
+      return "Invalid phone number.";
+    default:
+      return fallback || "Something went wrong. Please try again.";
+  }
+};
+
 export default function SignUp() {
   const router = useRouter();
   const { user } = useAuth();
@@ -147,10 +167,13 @@ export default function SignUp() {
       });
       router.replace("/(tabs)");
     } catch (error: any) {
+      const code = error?.code || "";
       toast.show({
         render: () => (
           <View className="bg-error-500 p-4 rounded-lg">
-            <Text className="text-white">{error.message}</Text>
+            <Text className="text-white">
+              {getFriendlyError(code, error.message)}
+            </Text>
           </View>
         ),
       });
@@ -229,11 +252,15 @@ export default function SignUp() {
         ),
       });
     } catch (error: any) {
+      const code = error?.code || "";
       toast.show({
         render: () => (
           <View className="bg-error-500 p-4 rounded-lg">
             <Text className="text-white">
-              {error.message || "Failed to send verification code"}
+              {getFriendlyError(
+                code,
+                error.message || "Failed to send verification code"
+              )}
             </Text>
           </View>
         ),
@@ -284,10 +311,13 @@ export default function SignUp() {
       });
       router.replace("/(tabs)");
     } catch (error: any) {
+      const code = error?.code || "";
       toast.show({
         render: () => (
           <View className="bg-error-500 p-4 rounded-lg">
-            <Text className="text-white">{error.message}</Text>
+            <Text className="text-white">
+              {getFriendlyError(code, error.message)}
+            </Text>
           </View>
         ),
       });

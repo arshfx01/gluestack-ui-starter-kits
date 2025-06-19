@@ -23,6 +23,24 @@ import { VStack } from "@/components/ui/vstack";
 import { HStack } from "@/components/ui/hstack";
 import { Text } from "@/components/ui/text";
 
+// Helper to map Firebase Auth error codes to user-friendly messages
+const getFriendlyError = (code: string, fallback?: string) => {
+  switch (code) {
+    case "auth/invalid-email":
+      return "Invalid email address.";
+    case "auth/user-not-found":
+      return "No account found with this email.";
+    case "auth/wrong-password":
+      return "Incorrect password. Please try again.";
+    case "auth/email-already-in-use":
+      return "This email is already registered.";
+    case "auth/too-many-requests":
+      return "Too many attempts. Please try again later.";
+    default:
+      return fallback || "Something went wrong. Please try again.";
+  }
+};
+
 export default function TeacherAuth() {
   const [isSignUp, setIsSignUp] = useState(false);
   const [email, setEmail] = useState("");
@@ -83,10 +101,13 @@ export default function TeacherAuth() {
       }
       router.replace("/teacher/dashboard" as any);
     } catch (error: any) {
+      const code = error?.code || "";
       toast.show({
         render: () => (
           <View className="bg-error-500 p-4 rounded-lg">
-            <Text className="text-white">{error.message}</Text>
+            <Text className="text-white">
+              {getFriendlyError(code, error.message)}
+            </Text>
           </View>
         ),
       });
