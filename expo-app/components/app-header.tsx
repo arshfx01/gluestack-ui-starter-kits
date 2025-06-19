@@ -204,12 +204,16 @@ export const AppHeader = () => {
             >
               <ArrowLeft color="#000" size={20} />
             </TouchableOpacity>
-            <Text
-              className="text-2xl text-[#000] capitalize"
-              style={{ fontFamily: "BGSB" }}
-            >
-              {displayTitle}
-            </Text>
+            <View className="flex-1   justify-center items-center">
+              <View className="flex items-center bg-background-100 px-4 py-2 rounded-full border border-border-200 shadow-sm">
+                <Text
+                  className="text-lg text-[#000] capitalize"
+                  style={{ fontFamily: "BGSB" }}
+                >
+                  {displayTitle}
+                </Text>
+              </View>
+            </View>
             <TouchableOpacity className="flex justify-center items-center border-border-300 p-3 rounded-full border bg-background-50">
               <ShieldQuestion color="#a2a2a2" size={20} />
             </TouchableOpacity>
