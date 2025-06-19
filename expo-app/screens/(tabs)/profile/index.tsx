@@ -37,8 +37,24 @@ import {
 } from "@/components/ui/actionsheet";
 import { LinearGradient } from "expo-linear-gradient";
 import { gradientPairs } from "@/constants/gradients";
+import { collection, query, where, getDocs } from "firebase/firestore";
+import { db } from "@/app/config/firebase";
 
 type Props = {};
+
+// Extend UserProfile locally to allow extra fields
+interface ExtendedUserProfile {
+  fullName?: string;
+  rollNo?: string;
+  email?: string;
+  role?: string;
+  classId?: string;
+  department?: string;
+  semester?: string | number;
+  year?: string | number;
+  cgpa?: string | number;
+  credits?: string | number;
+}
 
 // Function to hash a string and map it to an index
 const hashStringToIndex = (str: string, max: number) => {
@@ -53,6 +69,110 @@ const hashStringToIndex = (str: string, max: number) => {
 const Profile = (props: Props) => {
   const { user, userProfile } = useAuth();
   const [showLogoutSheet, setShowLogoutSheet] = React.useState(false);
+
+  // Attendance stats state
+  const [stats, setStats] = React.useState({
+    totalClasses: 0,
+    attendedClasses: 0,
+    missedClasses: 0,
+    attendancePercentage: 0,
+    currentStreak: 0,
+  });
+  const [loadingStats, setLoadingStats] = React.useState(true);
+
+  const profile: ExtendedUserProfile = userProfile || {};
+
+  // Fetch attendance stats (copied from home)
+  const fetchAttendanceStats = async () => {
+    if (!user) return;
+    try {
+      const classesQuery = query(
+        collection(db, "classes"),
+        where("students", "array-contains", user.uid)
+      );
+      const classesSnap = await getDocs(classesQuery);
+      const classesData = classesSnap.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      if (classesData.length === 0) {
+        setStats({
+          totalClasses: 0,
+          attendedClasses: 0,
+          missedClasses: 0,
+          attendancePercentage: 0,
+          currentStreak: 0,
+        });
+        return;
+      }
+      let totalClasses = 0;
+      let attendedClasses = 0;
+      let currentStreak = 0;
+      let tempStreak = 0;
+      let lastDate: string | null = null;
+      for (const classData of classesData) {
+        const attendanceQuery = query(
+          collection(db, "attendance"),
+          where("classId", "==", classData.id)
+        );
+        const attendanceSnap = await getDocs(attendanceQuery);
+        const sortedAttendance = attendanceSnap.docs
+          .map((doc) => doc.data())
+          .sort(
+            (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+          );
+        sortedAttendance.forEach((record) => {
+          if (record.present && Array.isArray(record.present)) {
+            totalClasses++;
+            if (record.present.includes(user.uid)) {
+              attendedClasses++;
+              const currentDate = record.date;
+              if (lastDate) {
+                const lastDateObj = new Date(lastDate);
+                const currentDateObj = new Date(currentDate);
+                const diffDays = Math.floor(
+                  (currentDateObj.getTime() - lastDateObj.getTime()) /
+                    (1000 * 60 * 60 * 24)
+                );
+                if (diffDays === 1) {
+                  tempStreak++;
+                } else {
+                  tempStreak = 1;
+                }
+              } else {
+                tempStreak = 1;
+              }
+              if (tempStreak > currentStreak) {
+                currentStreak = tempStreak;
+              }
+              lastDate = currentDate;
+            }
+          }
+        });
+      }
+      const missedClasses = totalClasses - attendedClasses;
+      const attendancePercentage =
+        totalClasses > 0
+          ? Number(((attendedClasses / totalClasses) * 100).toFixed(2))
+          : 0;
+      setStats({
+        totalClasses,
+        attendedClasses,
+        missedClasses,
+        attendancePercentage,
+        currentStreak,
+      });
+    } catch (error) {
+      console.error("Error fetching attendance stats:", error);
+    } finally {
+      setLoadingStats(false);
+    }
+  };
+
+  React.useEffect(() => {
+    fetchAttendanceStats();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user]);
 
   const handleLogout = async () => {
     try {
@@ -75,8 +195,9 @@ const Profile = (props: Props) => {
     ? "Phone Number"
     : "N/A";
 
-  const displayUserName = userProfile?.fullName || "Guest User";
-  const displayRollNumber = userProfile?.rollNo || "N/A";
+  // Use profile object for display values
+  const displayUserName = profile.fullName || "Guest User";
+  const displayRollNumber = profile.rollNo || "N/A";
 
   // Select gradient based on the user's name
   const gradientIndex = hashStringToIndex(
@@ -126,6 +247,15 @@ const Profile = (props: Props) => {
                 Roll Number: {displayRollNumber}
               </Text>
             </HStack>
+            {/* fetch students department */}
+            <Badge className="bg-background-100 border border-border-200 rounded-md px-2 py-[1px]">
+              <BadgeText
+                className="text-xs  text-typography-600"
+                style={{ fontFamily: "InterBold" }}
+              >
+                {profile.department || "N/A"}
+              </BadgeText>
+            </Badge>
           </VStack>
         </VStack>
 
@@ -138,14 +268,40 @@ const Profile = (props: Props) => {
                 <Text className="text-typography-500">Attendance</Text>
               </HStack>
               <VStack space="xs">
-                <Text
-                  className="text-3xl text-typography-900"
-                  style={{ fontFamily: "BGSB" }}
-                >
-                  85%
-                </Text>
+                {loadingStats ? (
+                  <Text
+                    className="text-3xl text-typography-400"
+                    style={{ fontFamily: "BGSB" }}
+                  >
+                    ...
+                  </Text>
+                ) : (
+                  <HStack className="items-end">
+                    <Text
+                      className="text-3xl text-typography-900"
+                      style={{ fontFamily: "BGSB" }}
+                    >
+                      {Math.floor(stats.attendancePercentage)}
+                    </Text>
+                    <Text
+                      className="text-2xl text-typography-400"
+                      style={{ fontFamily: "BGSB" }}
+                    >
+                      .
+                      {((stats.attendancePercentage % 1) * 100)
+                        .toFixed(0)
+                        .padStart(2, "0")}
+                    </Text>
+                    <Text
+                      className="text-2xl text-typography-400"
+                      style={{ fontFamily: "BGSB" }}
+                    >
+                      %
+                    </Text>
+                  </HStack>
+                )}
                 <Text className="text-xs text-typography-400">
-                  Last updated: Today
+                  Total Classes: {stats.totalClasses}
                 </Text>
               </VStack>
             </VStack>
@@ -161,7 +317,7 @@ const Profile = (props: Props) => {
                   className="text-3xl text-typography-900"
                   style={{ fontFamily: "BGSB" }}
                 >
-                  3.8
+                  {profile.cgpa || "N/A"}
                 </Text>
                 <Text className="text-xs text-typography-400">
                   Current Semester
@@ -184,7 +340,11 @@ const Profile = (props: Props) => {
                   className="text-3xl text-typography-900"
                   style={{ fontFamily: "BGSB" }}
                 >
-                  4th
+                  {profile.year && profile.semester
+                    ? `${profile.year}-${profile.semester}`
+                    : profile.semester
+                    ? `Semester ${profile.semester}`
+                    : "N/A"}
                 </Text>
                 <Text className="text-xs text-typography-400">Out of 8</Text>
               </VStack>
@@ -201,7 +361,7 @@ const Profile = (props: Props) => {
                   className="text-3xl text-typography-900"
                   style={{ fontFamily: "BGSB" }}
                 >
-                  120
+                  {profile.credits || "N/A"}
                 </Text>
                 <Text className="text-xs text-typography-400">
                   Required: 160
@@ -280,7 +440,10 @@ const Profile = (props: Props) => {
         </View>
 
         {/* Settings Button */}
-        <TouchableOpacity className="w-full flex-row items-center justify-between bg-background-50 p-4 rounded-xl border border-border-200">
+        <TouchableOpacity
+          className="w-full flex-row items-center justify-between bg-background-50 p-4 rounded-xl border border-border-200"
+          onPress={() => router.push("/settings" as any)}
+        >
           <HStack className="items-center space-x-2" space="md">
             <Settings size={20} color="#6b7280" />
             <Text className="text-lg font-semibold text-typography-900">
@@ -293,7 +456,7 @@ const Profile = (props: Props) => {
         {/* Logout Button */}
         <TouchableOpacity
           onPress={() => setShowLogoutSheet(true)}
-          className="w-full flex-row items-center justify-center bg-background-900 px-6 py-3 rounded-lg"
+          className="w-full flex-row items-center justify-center bg-background-900 px-6 py-3 rounded-xl"
         >
           <LogOut size={20} color="white" />
           <Text className="text-white ml-2 text-lg font-bold">Logout</Text>
@@ -323,7 +486,7 @@ const Profile = (props: Props) => {
             </Text>
             <ActionsheetItem
               onPress={handleLogout}
-              className="bg-error-500 rounded-lg w-full flex justify-center items-center"
+              className="bg-error-500 rounded-xl w-full flex justify-center items-center"
             >
               <ActionsheetItemText className="text-white text-lg font-semibold text-center">
                 Logout

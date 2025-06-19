@@ -14,6 +14,7 @@ import {
   Clock,
   MapPin,
   Book,
+  ClipboardCheck,
 } from "lucide-react-native";
 import { TouchableOpacity, View } from "react-native";
 import { router, useSegments } from "expo-router";
@@ -160,14 +161,11 @@ const BottomBtns = (props: Props) => {
               action="primary"
             >
               <ButtonIcon>
-                <Sparkles size={18} strokeWidth={2} color="white" />
+                <ClipboardCheck size={18} strokeWidth={2} color="white" />
               </ButtonIcon>
               <ButtonText className="" style={{ fontFamily: "BGSB" }}>
-                Mark
+                Mark Attendance
               </ButtonText>
-              <ButtonIcon>
-                <CheckIcon size={20} strokeWidth={2} color="white" />
-              </ButtonIcon>
             </Button>
           )
         ) : null}
